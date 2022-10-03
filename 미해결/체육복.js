@@ -98,4 +98,4 @@ function solution(n, lost, reserve) {
   }
   return n - P.length;
 }
-solution(n, lost, reserve);
+solution(n, lost, reserve); //80점

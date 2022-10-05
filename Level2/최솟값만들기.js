@@ -8,7 +8,8 @@ function solution(A, B) {
   for (i = 0; i < A.length; i++) {
     answer = answer + C[i] * D[i];
   }
-  console.log(answer);
+  return answer;
 }
 
 solution(A, B);
+//해결

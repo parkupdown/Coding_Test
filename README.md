@@ -59,3 +59,23 @@ function solution(s) {
 solution(s);
 ```
 이렇게 풀었는데 결과값은 정상적으로 나오지만 효율성 테스트를 통과하지 못했다.
+
+
+```JS
+const s = "baabaa";
+function solution(s) {
+  let A = [...s];
+  let B = [];
+  for (i = 0; i < A.length; i++) {
+    if (A[i] === B[B.length - 1]) {
+      B.pop();
+    } else if (A[i] !== B[B.length - 1]) {
+      B.push(A[i]);
+    }
+  }
+  return B.length === 0 ? 1 : 0; //이렇게 풀었더니 통과했다. 
+  //블로그를 찾아보았다ㅠㅠ
+}
+solution(s);
+```
+### splice는 효율성이 떨어진다 ( 반복마다 새로운 배열을 만들기때문) 반복문은 한 번의 loop만 돌리면서 즉각적으로 데이터를 비교하려면 하나의 배열을 생성하여 실시간으로 비교하는 방법이 더 좋다.

@@ -33,3 +33,29 @@ const RR = "love you , love, everything, love"
 console.log(RR.match(/love/gi))//없으면 null값이나온다.
 //return [love,love,love]
 ```
+
+## 짝지어제거하기 ( level2 ) ,Splice vs slice
+
+이 문제를 풀며 반복문(for문) + splice,slice에 대해 배울 수 있었다.
+
+### Splice = > 원본에 영향을 준다. 제거하고 남은 배열을 반환하고 만약 제거할게 없다면 undefined를 반환한다.
+### Slice => 원본에 영향을 주지 않는다. return이 필요 , 삭제할 배열 요소를 반환 받을 수 있다. 
+
+헤맸던 부분 
+```JS
+const s = "baabaa";
+function solution(s) {
+  let A = [...s];
+
+  for (i = 0; i < A.length; i++) {
+    if (A[i] === A[i + 1]) {
+      A.splice(i, 2);
+      i = 0; // 여기서 i=0으로 리셋했는데 반복문은 i=1로 돌아갔다. 반복문은 시작값을 0으로 시작할 뿐
+      // 다음 loop를 돌 때는 +1이 되기 때문에 i= -1 을 해주어야 정상적으로 작동되었다.
+    } 
+  }
+  return A.length === 0 ? 1 : 0;
+}
+solution(s);
+```
+이렇게 풀었는데 결과값은 정상적으로 나오지만 효율성 테스트를 통과하지 못했다.

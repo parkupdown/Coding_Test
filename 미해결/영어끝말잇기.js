@@ -14,8 +14,11 @@ function solution(n, words) {
   let A = words.map((item) => item.split("")).map((item) => [...item]);
   let answer = [];
   let answer2 = [];
+  let answer3 = [];
+  let answers = [];
   let C = new Set(words);
   let D = [...C];
+
   if (D.length !== words.length) {
     const Filterd = words.filter(
       (item, index) => index !== words.indexOf(item)
@@ -25,6 +28,13 @@ function solution(n, words) {
     answer2.push(NUM, Math.ceil(Index / n));
   } //나누어 떨어지면 n 이반환 반복해서 말한거
   for (i = 0; i < A.length - 1; i++) {
+    if (A[i].length === 1) {
+      let Num3 = (i + 1) / n === 0 ? n : (i + 1) % n;
+      let third = Math.ceil((i + 1) / n);
+      answer3.push(Num3, third);
+      break;
+    }
+
     if (A[i][A[i].length - 1] !== A[i + 1][0]) {
       let Num2 = (i + 1 + 1) % n === 0 ? n : (i + 1 + 1) % n;
       //n+1이 배열 인덱스니까
@@ -35,7 +45,7 @@ function solution(n, words) {
       break;
     }
   }
-  if (answer.length === 0 && answer2.length === 0) {
+  if (answer.length + answer2.length === 0) {
     return [0, 0];
   }
   if (answer.length + answer2.length === 4) {
@@ -55,3 +65,4 @@ function solution(n, words) {
   }
 }
 solution(n, words);
+//쭉 가면서 그때 마다 검사를 해야한다!

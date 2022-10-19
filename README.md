@@ -79,3 +79,49 @@ function solution(s) {
 solution(s);
 ```
 ### splice는 효율성이 떨어진다 ( 반복마다 새로운 배열을 만들기때문) 반복문은 한 번의 loop만 돌리면서 즉각적으로 데이터를 비교하려면 하나의 배열을 생성하여 실시간으로 비교하는 방법이 더 좋다.
+
+## 멀리뛰기 (피보나치수열)
+
+<img width="550" alt="image" src="https://user-images.githubusercontent.com/101778169/196688477-48c37f30-96f8-488b-9032-c025cba389e6.png">
+
+해당문제를 보고 처음엔 팩토리얼을 활용하여 해결했다.
+```js
+const n = 10;
+
+function solution(n) {
+  const A = Math.floor(n / 2);
+  let answer = 0;
+  for (i = 1; i <= A; i++) {
+    let Sum = 1;
+    let count = i + n - i * 2; //6
+    for (j = 0; j < i; j++) {
+      Sum = Sum * ((count - j) / (i - j));
+    }
+    answer = answer + Sum;
+  }
+  const answers = (answer + 1) % 1234567;
+  return answers;
+}
+solution(n);
+```
+하지만 해당문제는 피보나치 수열을 활용해서 푸는 것만 정답으로 처리가 됐다
+
+### 피보나치수열
+(n-2)번째 항 + (n-1)번째 항이 n 번째 항인 수열을 말한다.
+
+1,1,2,3,5,8,13,21 이 이러하다
+
+문제를 보면 n=1 일때 1 n=2 일 때 2 n=3 일때 3 n= 4일때 5 n= 5일때 8이 리턴값으로 나오는것을 보면
+이는 피보나치 수열임을 알 수있다. 
+
+그렇기 때문에 
+```js
+function solution(n) {
+  let answer = [0, 1, 2];
+  for (i = 3; i <= n; i++) {
+    answer[i] = (answer[i - 2] + answer[i - 1]) % 1234567;
+  }
+  return answer[n] % 1234567;
+}//이렇게 해결할 수 있다.
+```
+

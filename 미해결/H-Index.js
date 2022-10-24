@@ -25,7 +25,7 @@ function solution(citations) {
   }
   return answer;
 }
-solution(citations); */
+solution(citations);
 
 const citations = [3, 0, 6, 1, 5];
 
@@ -40,3 +40,7 @@ function solution(citations) {
   console.log(B);
 }
 solution(citations);
+function solution(citations) {
+  var answer = 0;
+  return answer;
+}*/

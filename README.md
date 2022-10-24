@@ -125,3 +125,23 @@ function solution(n) {
 }//이렇게 해결할 수 있다.
 ```
 
+## 행렬의 곱셉(reduce 메소드)
+
+reduce 메소드는 map 과 forEach와 비슷하다!
+
+```js
+const number = [1,2,3,4]
+
+number.reduce((누산값,현재요소값,현재요소의index,현재배열)={
+return 다음누산값 },초기누산값)
+
+```
+예를들어 이렇게 사용할 수 있다.
+
+```js
+const numbers = [1,2,3,4]
+const sum = numbers.reduce((sum,num,index)=>{
+return sum+num},0)
+//10 순차적으로 더해준다.
+```
+참고 https://bigtop.tistory.com/69

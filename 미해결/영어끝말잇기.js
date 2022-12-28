@@ -1,69 +1,81 @@
-const n = 2;
-const words = ["ac", "ca", "ac", "ac"];
+const n = 5;
 
-function findOneWord(n, words, i, answer) {
-  if (words[i].length < 2) {
-    const target = n - ((i + 1) % n);
-    const orderTarget = Math.ceil((i + 1) / n);
-    answer.push(target, orderTarget);
+const words = [
+  "hello",
+  "observe",
+  "effect",
+  "take",
+  "either",
+  "recognize",
+  "encourage",
+  "e",
+  "establish",
+  "hang",
+  "gather",
+  "refer",
+  "reference",
+  "estimate",
+  "executive",
+];
 
-    return true;
+function findFailPerson(index, n) {
+  const answer = [];
+  const person = (index + 1) % n;
+  const personOrder = Math.ceil((index + 1) / n);
+
+  if (person === 0) {
+    answer.push(n, personOrder);
+  }
+  if (person !== 0) {
+    answer.push(person, personOrder);
+  }
+
+  return answer;
+}
+
+function findWordLength(wordArr) {
+  if (wordArr.length < 2) {
+    return false;
   }
 }
 
-function findOverlap(n, words, i, answer, checkArr) {
-  if (checkArr.includes(words[i])) {
-    const target = n - ((i + 1) % n);
-    const orderTarget = Math.ceil((i + 1) / n);
-    answer.push(target, orderTarget);
-
-    return true;
+function findWordDuplicate(word, checkDupArr) {
+  if (checkDupArr.includes(word)) {
+    return false;
   }
-  checkArr.push(words[i]);
+  checkDupArr.push(word);
 }
 
-function findMatch(n, words, i, answer, checkArr) {
-  const splitWord = words[i].split("");
-  const lastIndex = splitWord.length - 1;
+function findWordLine(wordArr, checkLineArr, index) {
+  const wordArrLastIndex = wordArr.length - 1;
+  const checkLineArrLastIndex = checkLineArr.length - 1;
 
-  if (i !== 0 && splitWord[0] !== checkArr[i - 1]) {
-    const target = n - ((i + 1) % n);
-    const orderTarget = Math.ceil((i + 1) / n);
-    answer.push(target, orderTarget);
-
-    return true;
+  if (index !== 0 && checkLineArr[checkLineArrLastIndex] !== wordArr[0]) {
+    return false;
   }
-
-  checkArr.push(splitWord[lastIndex]);
+  checkLineArr.push(wordArr[wordArrLastIndex]);
 }
 
 function solution(n, words) {
-  const answer = [];
-  const checkArr = [];
+  const checkDupArr = [];
+  const checkLineArr = [];
+  let index = 0;
 
-  for (let i = 0; i < words.length; i++) {
-    if (findOneWord(n, words, i, answer, checkArr) === true) {
-      return answer;
+  for (index; index < words.length; index++) {
+    const wordArr = words[index].split(``);
+    if (findWordLength(wordArr) === false) {
+      console.log("asdd");
+      return findFailPerson(index, n);
     }
-    if (findMatch(n, words, i, answer, checkArr) === true) {
-      return answer;
+    if (findWordDuplicate(words[index], checkDupArr) === false) {
+      return findFailPerson(index, n);
     }
-    if (findOverlap(n, words, i, answer, checkArr) === true) {
-      return answer;
+    if (findWordLine(wordArr, checkLineArr, index) === false) {
+      console.log("Ads");
+      return findFailPerson(index, n);
     }
+    console.log(wordArr);
   }
+  return [0, 0];
 }
 solution(n, words);
-/* if (findOneWord(n, words, answer) === true) {
-    return answer;
-  }
-  if (findOverlap(n, words, answer) === true) {
-    return answer;
-  }
-  if (findMatch(n, words, answer) === true) {
-    return answer;
-  }
-  if (answer.length === 0) {
-    answer.push(0, 0);
-    return answer;
-  } */

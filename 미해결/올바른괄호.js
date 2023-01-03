@@ -1,9 +1,24 @@
-const s = "(()(()";
+const s = "()()";
 
 function solution(s) {
-  let A = [...s];
+  const sArr = s.split(``);
+  const check = [];
 
+  for (let i = 0; i < sArr.length; i++) {
+    if (sArr[i] === "(") {
+      check.push(1);
+    } else {
+      if (check.length === 0) {
+        return false;
+      }
+      check.pop();
+    }
+  }
+
+  if (check.length === 0) {
+    return true;
+  }
+
+  return false;
 }
 solution(s);
-//while문으로 A의 길이가 2이상이 될때까지로 설정
-//그리고 A의 length 가 1이냐 0이냐로 return내면된다.

@@ -145,3 +145,19 @@ return sum+num},0)
 //10 순차적으로 더해준다.
 ```
 참고 https://bigtop.tistory.com/69
+
+## new Map() 활용법 (배열에서 특정 원소 몇개인지 찾거나 이를 이용하는 문제)
+
+```js
+
+const arr = [1,2,3,3,4,4,5,6,6]
+```
+arr을 forEach() 메서드를 통해 순환하며 map에 저장하면서하면 간단하게 내용을 저장할 수 있다.
+
+```js
+arr.forEach((item))=>{
+map.set(item,map.get(item)+1)
+}
+
+```
+

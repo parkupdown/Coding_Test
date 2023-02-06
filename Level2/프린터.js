@@ -1,23 +1,53 @@
-const priorities = [2, 1, 3, 2];
+const priorities = [1, 2, 3, 2];
+const locations = 2;
 
-function makeArr(priorities) {
-  const Arr = [];
+class Queue {
+  constructor() {
+    this.queue = [];
+    this.front = 0;
+    this.rear = 0;
+  }
+  enqueue(value) {
+    this.queue[this.rear] = value;
+    this.rear++;
+  }
+  dequeue() {
+    const value = this.queue[this.front];
+    delete this.queue[this.front];
+    this.front++;
+
+    return value;
+  }
+  peek() {
+    return this.queue[this.front];
+  }
+}
+
+function solution(priorities, locations) {
+  const queue = new Queue();
   let count = 0;
-  priorities.forEach((item) => {
-    Arr.push(count);
-    count = count + 1;
-  });
+  for (let i = 0; i < priorities.length; i++) {
+    queue.enqueue([priorities[i], i]);
+  }
 
-  return Arr; // [0,1,2,3]
-  //이걸 활용해서 location과 같은 element가 나오면 순서를 카운트해서 return?
+  priorities.sort((a, b) => b - a);
+
+  while (true) {
+    let currentValue = queue.peek();
+    if (priorities[count] > currentValue[0]) {
+      queue.enqueue(queue.dequeue());
+    } else {
+      const value = queue.dequeue();
+      count = count + 1;
+      if (value[1] === locations) {
+        return count;
+      }
+    }
+  }
+  return count;
 }
 
-function solution(priorities) {
-  const arr = makeArr(priorities);
-  console.log(arr);
-}
-
-solution(priorities);
+solution(priorities, locations);
 //index를 추적할 수 있어야 함
 
 //location에 따라 몇 번 째인지 추적이 가능해야한다.

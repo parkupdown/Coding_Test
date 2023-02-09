@@ -1,0 +1,4 @@
+SELECT NAME FROM ANIMAL_INS  ORDER BY DATETIME LIMIT 1
+
+
+/* LIMIT 뒤에 바로 숫자를 적어주면 된다. */

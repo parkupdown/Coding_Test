@@ -1,5 +1,5 @@
-let str1 = "aa1+aa2";
-let str2 = "AAAA12";
+let str1 = "abab";
+let str2 = "baba";
 function solution(str1, str2) {
   const LowerStr1 = str1.toLowerCase();
   const LowerStr2 = str2.toLowerCase();
@@ -22,18 +22,30 @@ function solution(str1, str2) {
 
   let intersectionCount = 0;
 
-  nonDupliArr1.forEach((item) => {
-    if (nonDupliArr2.includes(item)) {
-      intersectionCount = intersectionCount + 1;
-    }
-  });
+  if (filteredArr1.length > filteredArr2.length) {
+    filteredArr2.forEach((item) => {
+      if (filteredArr1.includes(item)) {
+        intersectionCount = intersectionCount + 1;
+      }
+    });
+  }
+
+  if (filteredArr2.length >= filteredArr1.length) {
+    filteredArr1.forEach((item) => {
+      if (filteredArr2.includes(item)) {
+        intersectionCount = intersectionCount + 1;
+      }
+    });
+  }
+
   console.log(intersectionCount);
   if (intersectionCount === 0) {
     return 65536;
   }
 
-  const unionCount = [...new Set([...nonDupliArr1, ...nonDupliArr2])].length;
-  console.log(unionCount);
+  const unionCount =
+    filteredArr1.length + filteredArr2.length - intersectionCount;
+
   return Math.floor((intersectionCount / unionCount) * 65536);
 }
 solution(str1, str2);

@@ -303,3 +303,133 @@ javascript에서는 string 끼리의 + 연산이 가능하다.
 문제에 써진대로 푼다는 점이다 문제를 보고 생각한 후 해결하는 습관을 가져야 할 거 같다.
 문제에 써진 힌트대로 해결하다보니 문제가 복잡해지고 필요없는 연산이 들어간다.
 
+## 최솟값 만들기
+
+이 문제는 비교적 쉬운 문제였다. 
+
+![](https://velog.velcdn.com/images/tkdgk1996/post/cf3a01db-02ea-430e-8c41-6d96e62a05e5/image.png)
+
+ 배열의 요소를 랜덤하게 곱했을 때 가장 최소가 나오는 값을 리턴하면 되는 문제이다.
+ 
+ 필자의 접근법은 다음과같다.
+ 
+>  A배열의 가장 작은 숫자에 B배열의 가장 큰숫자를 곱하면 결과값이 가장 작지않나?
+
+결과는 성공! 
+
+내가 푼 코드
+
+```js
+const A = [1, 4, 2];
+const B = [5, 4, 4];
+
+function solution(A, B) {
+  const a = A.sort((a, b) => a - b);
+  const b = B.sort((a, b) => b - a);
+
+  let answer = 0;
+  for (let i = 0; i < A.length; i++) {
+    answer = answer + a[i] * b[i];
+  }
+  
+
+  return answer;
+}
+```
+
+그럼에도 여기서 더 간단하게 만들수 있는 타인의 코드가 있었다.
+
+```js
+
+function solution(A,B){
+    A.sort((a, b) => a - b)
+    B.sort((a, b) => b - a)
+    return A.reduce((total, val, idx) => total + val * B[idx], 0)
+}
+```
+여기서 배운 점은 2가지이다
+
+1. sort는 원본을 변경시킨다! 그럼으로 새로 그 값을 저장하지 않아줘도 된다.
+2. reduce
+
+### reduce
+
+reduce함수는 가끔 썼었지만 자주 쓰지는 않았다. 뭔가 reduce를 쓰는 것보다 for문을 사용하는 것이
+개인적으로는 더 좋았기 때문이다. 그럼에도 reduce를 한번 알아보고 넘어가야할 거 같아 정리를 해본다.
+
+reduce 메서드는 다음과 같이 사용한다. 
+> 배열.reduce((누적값,현재값,인덱스,요소)=>{return 결과, 초기값}
+
+여기서 초기값은 설정해주지 않으면 자동으로 0이 된다.
+
+하지만 reduce를 무조건 덧셈에 활용할 수 있는 것은 아니다.
+
+map, filter와 동일하게 사용할 수 있다.
+
+```js
+result = array.reduce((acc,cur)=>{
+acc.push(cur%2===0 ? "홀수" : "짝수")
+ return acc;
+},[])
+
+```
+이렇게 초기값을 [] 인 배열로 설정하면 조건에 따른 배열로 리턴도 가능하다. 
+
+정리하면
+array.reduce((누적값, 현재값, 인덱스)=>{
+return 
+},초기값)
+
+이렇게 사용하고 return된 값을 받는 메서드이다! 
+[제로초 Reduce 설명글](https://www.zerocho.com/category/JavaScript/post/5acafb05f24445001b8d796d)
+
+
+## 올바른괄호
+
+올바른 괄호문제는 "스택" 문제이다
+
+![](https://velog.velcdn.com/images/tkdgk1996/post/22f2157d-8c70-4448-83ea-9f1293031b66/image.png)
+
+
+스택문제는 
+[프로그래머스 JS 코딩테스트 인터넷강의](https://school.programmers.co.kr/learn/courses/13213/13213-%EC%BD%94%EB%94%A9%ED%85%8C%EC%8A%A4%ED%8A%B8-%EA%B4%91%ED%83%88-%EB%B0%A9%EC%A7%80-a-to-z-javascript)
+
+여기서 다루어 보았다. 스택은 First In Last Out이다. 
+처음에 들어온것이 마지막에 나가는 순서인데 여기서는 그냥 검증을 해주는 용도로 스택을 사용하면된다.
+
+>나의 접근법은 아래와 같다. "(" 를 보면 arr에 무언가를 담고 
+")"를 보면 arr에서 한가지를 빼자
+만약 arr이 비었는데 (length가 0 인데) ")" 가 나온다면 false를 return 
+또 모든 배열 순환이 끝난 후 length가 0보다 크면 false를 return 하는 것으로 정했다.
+
+나의 풀이법은 다음과 같다. 
+
+```js
+const s = "(())()";
+
+function solution(s) {
+  const check = [];
+
+  for (let i = 0; i < s.length; i++) {
+    if (s.charAt(i) === "(") {
+      check.push(0);
+    }
+    if (s.charAt(i) === ")") {
+      if (check.length === 0) {
+        return false;
+      }
+      check.pop();
+    }
+  }
+  if (check.length > 0) {
+    return false;
+  }
+  return true;
+}
+```
+
+앞서 배운 문제에서 split 하지 않고 charAt으로 string 내부의 index에 접근하여 
+문제를 해결하였다.
+
+
+

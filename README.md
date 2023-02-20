@@ -161,3 +161,145 @@ map.set(item,map.get(item)+1)
 
 ```
 
+# 코딩테스트를 연습하는 방법을 바꾸어보려고한다! 
+
+**_매일 1~2문제를 꾸준히 푸는 것은 좋지만 어떻게 꾸준히 풀어나가냐가 중요한 것같다.
+앞으로는 30분안에 문제를 해결하지 못했을 때는 실패로 간주하고 해답을 볼것이다.
+그리고 타인이 써주신 코드를 확인하고 그곳에서 배운 점을 정리하여 내 것으로 만들어보자!!_ **
+
+문제풀이는 정답 성공률 순서로 정렬하여 풀어나가겠다.
+
+## 최댓값과 최솟값
+
+내가 푼 풀이
+
+```js
+const s = "1 2 3 4";
+
+function solution(s) {
+  const arr = s.split(` `).sort((a, b) => b - a);
+
+  const lastIndex = arr.length - 1;
+
+  return `${arr[lastIndex]} ${arr[0]}`;
+}
+solution(s);
+```
+나의 문제 계획은 다음과 같다.
+1. 문자열을 배열로 변경하자. (split)
+2. 변경된 배열을 내림차순으로 정렬하자. (sort)
+3. 0인덱스는 최댓값 lastIndex는 최솟값이 된다.
+4. return `${} ${}`로 중간 공백을 표시하자.
+
+내가 본 풀이
+```js
+function solution(s) {
+  const arr = s.split(``);
+
+  return Math.min(...arr) + ` ` + Math.max(...arr);
+}
+```
+
+굳이 배열을 정돈할 필요없이 split으로 공백을 제거한 배열로 만든 후
+...의 spread operator를 활용하여 공백이 없는 string으로 만들어준다
+"1","2","3","4" 의 형태
+> 그 후 Math 메소드를 활용하여 Math.max, Math.min 함수를 사용한다.
+> _**위 함수는 string사이에서도 사용이가능하다!!**_
+
+
+## JadenCase 문자열 
+
+
+문제는 다음과 같다! 
+![문제 사진](https://velog.velcdn.com/images/tkdgk1996/post/f86f3a39-82a4-41b7-9e0b-4d03b23c8dc4/image.png)
+
+문제는 간단했지만 이상하게 풀리지가 않았다. 그럼 필자에겐 간단하지 않았다는 말..
+
+이 전에 풀었을 때는 통과했었지만 코드가 굉장히 지저분했다. 
+
+나의 문제 해결 계획은 다음과 같다.
+
+> 1. split 메서드로 스트링을 배열화 시킨다 
+2. 받아온 요소에서 공백이 아닌 요소는 다시 한번 map을 사용한다.
+3. 그 때 받아온 요소의 인덱스가 0이고 첫 번째 인자가 숫자가 아니라면 toUpperCase를하고
+나머지 요소엔 toLowerCase를 한다.
+
+결과는 실패 ! 
+
+실패한 코드는 다음과 같다.
+```js
+const s = "3people   unFollowed me";
+
+function solution(s) {
+  const arr = s
+    .toLowerCase()
+    .split(` `)
+    .map((item) => {
+      if (item === ``) {
+        return item;
+      }
+      return item
+        .split()
+        .map((charset, index) => {
+          const check = /^[a-zA-Z]+$/;
+          console.log(charset);
+          return check.test(charset) === false && index === 0
+            ? charset
+            : charset.toUpperCase();
+        })
+        .join(``);
+    });
+
+  return arr;
+}
+solution(s);
+```
+정규식에.. map 두번 split 두번 굉장히 복잡해보인다.
+
+특히 정규식에선 왜 헤맸는지 모르겠다.
+**기본적인 정규식.test(string) ** 이걸 왜 그렇게 헤멨는지 모르겠다.
+
+정리하면서 해보니 내가 아는게 제대로 아는게 아니었구나 라는 점을 알게된다..
+
+다시 해답을 보면서 느낀 점 및 잘못된 오류는 다음과 같다.
+
+> toUpperCase와 toLowerCase는 숫자에 적용하나 빈칸에 적용하나 변하지 않는 효과는 동일하다
+ 즉, 굳이 숫자와 빈칸을 나누어줄 필요가 없다.
+ 그냥 첫번 째 인덱스는 UpperCase() 나머지는 LowerCase()를 적용해주면된다.
+ 
+
+이렇게 생각하니 정규식이 필요가 없어졌다.  이젠 그냥 string의 첫 번째 요소와 나머지 요소에 접근할 수 있으면 된다.
+
+내가 본 코드는 다음과 같다.
+
+```js
+const S = "3people   unFollowed me";
+
+const arr = S.split(` `)
+  .map((item) =>
+    item === ""
+      ? item
+      : item.charAt(0).toUpperCase() + item.substring(1).toLowerCase()
+  )
+  .join(` `);
+```
+
+위 코드는 
+
+### CharAt, substring
+
+위 두 메서드를 사용해서 문제를 해결했다. map과 forEach는 배열에서만 사용이 가능하다.
+이 매서드를 쓰려고 다시한번 배열을 생성하는 바보같은 짓을 했다..
+
+string 자체에서 몇 번째 요소를 사용하고 싶다면 charAt,substring 두개면 된다.
+
+먼저 charAt으로 string에서 첫번째 요소를 가져와서 toUpperCase해주고
+나머지 요소는 substring으로 접근하여 toLowerCase 해주면 된다.
+javascript에서는 string 끼리의 + 연산이 가능하다.
+그렇기 때문에 item.charAt(0).toUpperCase() + item.substring(1).toLowerCase()
+이렇게 return 해줄 수 있다.
+
+이 문제를 풀면서 알게된 필자의 좋지 않은 습관은 
+문제에 써진대로 푼다는 점이다 문제를 보고 생각한 후 해결하는 습관을 가져야 할 거 같다.
+문제에 써진 힌트대로 해결하다보니 문제가 복잡해지고 필요없는 연산이 들어간다.
+

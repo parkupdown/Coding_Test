@@ -431,5 +431,340 @@ function solution(s) {
 앞서 배운 문제에서 split 하지 않고 charAt으로 string 내부의 index에 접근하여 
 문제를 해결하였다.
 
+## 이진변환반복하기!
+![](https://velog.velcdn.com/images/tkdgk1996/post/97ccb0bc-2a5f-449c-86c2-fe7593270746/image.47)
+
+나의 풀이는 
+1. s==="1"이 될 때 까지 s를 깎아 나가야겠다!
+2. "0"을 filter로 제거할 때마다 zeroCount를 1씩 높이자
+3. 그 후 s= 0이 제거 된 배열의 길이를 2진법으로 나타낸 값으로 "재할당" 해준다
+4. 그리고 transCount(2진법으로 바꾼 횟수)를 높인다
+
+나의 코드 
+```js
+function solution(s) {
+  let zeroCount = 0;
+  let transCount = 0;
+
+  while (s !== "1") {
+    //.split 보다 spread Operator를 사용해서 string => arr로 변경하였다.
+    const ArrLength = [...s].filter((item) => {
+      if (item === "1") {
+        return item;
+      }
+      if (item === "0") {
+        zeroCount = zeroCount + 1;
+      }
+    }).length;
+
+    s = ArrLength.toString(2);
+    transCount = transCount + 1;
+  }
+  //0다 사라짐
+
+  return [transCount, zeroCount];
+}
+
+```
+
+
+
+이 문제를 해결하면서 재할당에 대한 개념을 좀 더 학습해야 겠다는 생각이 들었다.
+
+필자가 이 문제에서 헤맸던 부분은 재할당을 해주는 시점을 헷갈려했다.. 아마 let과 const의 재할당을
+
+다시 학습해야겠다 생각을 했다.
+
+### const, let, var 
+
+1. 변수선언방식 
+
+Var : 
+중복 선언 ⭕️ 재할당 ⭕️ 
+
+```js
+var A ="123"
+
+var A ="345"
+```
+이게 된다 ㄷ ㄷ var은 마지막에 할당된 값이 최종 변수에 저장된다.
+이는 양날의 검이 될 수 있다. 유연하게 사용도 가능하지만 나의 실수를 어떤 것도 알려주지 않는다..
+
+Let : 
+중복선언 ❌ 재할당 ⭕️
+
+```js
+let A ="123"
+
+let A ="345"
+//이러면 오류메세지 바로 등장!! 
+
+A = "456" 
+//이건 가능! 
+```
+위 코드와 같이 중복선언은 안되지만 재할당은 가능하다.
+재할당이 가능하다는 점이 코딩테스트 문제를 풀때 유용하게 작용할 거 같다.
+
+Const:
+중복선언 ❌ 재할당❌ 
+```js
+const A ="123"
+const A="345"
+//오류발생!!!
+A="678"
+//오류발생!!!
+```
+Const는 변하지 않는 값을 선언하는데 유용하다
+그러나 array에 push 되는 것은 중복선언하거나 재할당 하는것이 아님으로
+배열에는 const를 사용하는 것이 좋다.
+
+2.스코프
+
+Var: 
+함수레벨스코프
+
+즉, 함수 내부에 있는 var이면 함수 내에서 유효하다! 
+```js
+const AA = (a)=>{
+ if(a==="1"){
+ var b="234"
+ }
+  console.log(b)
+}
+
+AA(a) //이게 에러나지않고 가능하다 그저 함수안에서만 선언된다면 
+//그 함수 내부에서는 모두 사용이 가능하다.
+```
+
+Const, Let : 
+블록레벨스코프
+
+함수 뿐 아니라 if 절 for while try/catch forEach 등 모든 코드블록 내부에서 선언된 변수는 블록 내부에서만 유효하다.
+
+```js
+const AA =()=>{
+ for(let i = 0 ; i<3;i++){
+  const A = "123" 
+   
+ }
+  console.log(A)
+}
+//이러면 바로 오류가 발생한다. A는 for문 안에서 선언됐기 때문에 for문 안에서만 사용이 가능하다.
+//for문 안의 값을 외부의 let 변수에 재할당해줄 수는 있다.
+
+```
+
+3. 호이스팅 방식
+
+먼저 호이스팅이란 함수내 필요한 모든 변수값들은 유효범위의 최상단에 선언한것처럼 동작하는것을 말한다.
+그냥 변수,함수들은 맨위로 올라온다는 말! 
+
+
+Var:
+```js
+console.log(a); //undefined
+
+var a = 123;
+console.log(a); //123
+```
+a에 할당만 안됐을 뿐 선언되었음을 알고 undefined로 초기화를 시켜놓아서 undefined를 출력한다.
+
+Const,Let:
+```js
+console.log(a); //ReferenceError: a is not defined
+
+let a = 123;
+console.log(a); // 123
+```
+let과 const는 선언만해놓고 초기회가 이루어지지않아 오류가 발생한다.
+
+**즉, 초기화 차이이다.** 
+Var은 선언과 동시에 변수 값에 대한 초기화가 이루어지지만 
+const 와 let은 변수 선언문을 만나야 초기화가 이루어진다.
+
+[var,const,let](https://cheershennah.tistory.com/231)
+
+
+## 숫자의 표현 
+
+![](https://velog.velcdn.com/images/tkdgk1996/post/ef35b22c-9d04-403c-963e-1edc5bed203a/image.48)
+
+문제는 1씩 더해서 n이 되는 경우의 수를 구하는 문제였다.
+사실 이 문제를 금방 풀수 있을 거라 생각했는데 35분정도 걸렸던 거 같다..
+
+이 전에 이 문제를 접했을 때 이중for문(이번도사용했지만 ㅠㅠ) else if 불필요한 점을 제거하고
+최선의 방법으로 수행하고 싶었다. 
+
+이전에 내가 풀었던 풀이 방법은 
+```js
+
+function solution(n) {
+  let arr = [];
+  let sum = 0;
+  let count = 0;
+  let check = 0;
+  for (i = 1; i <= n; i++) {
+    arr.push(i);
+  }
+  for (i = 0; i < arr.length; i++) {
+    sum = sum + arr[i];
+    if (sum > n) {
+      check = check + 1;
+      i = check;
+      sum = 0;
+    } else if (sum === n) {
+      check += 1
+      count +=1
+      i = check;
+      sum = 0;
+    }
+  }
+  return count;
+}
+```
+다음과 같다. 먼저 n까지의 배열을 만들고 그 배열을 for문 속에서 순회하면서 순차적으로 더했다.
+이중for문을 사용하는 대신에 check라는 변수를 만들어 그것으로 i를 재할당 하여 1개의 for문이 
+반복되도록 하였다. 
+
+개선점 
+1. 배열을 굳이 만들필요가 있을까?
+2. else if를 안써도 될거 같다.
+3. check라는 변수를 넣어주는 것보다는 다른 방법은 없을까?
+
+위 세가지 사항을 고려하여 다시 코드를 구성해 보았다.
+```js
+const n = 15;
+function solution(n) {
+  let count = 0;
+  for (let i = 1; i < n / 2; i++) {
+    let sum = 0;
+    for (let j = i; j < n; j++) {
+      sum = sum + j;
+      if (sum === n) {
+        count = count + 1;
+        break;
+      }
+      if (sum > n) {
+        break;
+      }
+    }
+  }
+  return count + 1;
+}
+solution(n);
+```
+일단 이중포문을 사용하였고 break를 통해 내부의 for 문을 컨트롤하였다.
+외부의 for문은 굳이 n 까지 돌지 않아도 된다고 생각하여 n/2 까지만 돌도록 코드를 짰다.
+
+타인의 코드
+
+```js
+function expressions(num) {
+  var answer = 1; //(15)
+  var n, sum;
+
+  for(var i=1;i<=Math.floor(num/2);i++){
+    n = i;
+    sum = 0;
+    while(sum<num) sum += n++;
+    if(sum==num) answer++;
+  }
+  return answer;
+}
+```
+내가 머리속에 구상했던 건 저 코드이다!! 
+
+while(sum<num) 으로 제한을 걸어두어서 자동으로 합이 num을 넘어서면 다음 i로 진행되도록
+코드가 짜여져있어서 보기편했다. 
+
+## 피보나치수열문제
+![](https://velog.velcdn.com/images/tkdgk1996/post/41bd01b7-47d4-4f65-8fa4-03fb9fce3c78/image.49)
+
+피보나치 수열은 0,1,1,2,3,5,8,13,21 ... 이렇게 끝에 두개씩 더한게 다음 수열의 원소가 된다.
+
+이 문제는 처음 풀었을 때 이해하지 못하여 미해결 문제로 남아있었다.
+
+그런데 다시 풀어보니 생각보다 쉽게 해결이 되었다 !!!! ㅎㅎ
+
+내가 생각한 논리는 이렇다.
+
+1. 배열로 생각했을 때 기본 배열 [0,1]에 lastIndex의 원소와 lastIndex-1의 원소가 다음 배열 원소가 된다.
+2. 그렇다면 lastIndex를 알아내고 각각 lastIndex원소와 lastIndex-1의 원소를 더해 배열에 push한다.
+3. 이를 n-1 만큼 순화하면서 push 해야 원하는 마지막 배열원소를 얻을 수 있고 이것이 답이겠다!
+
+해서 처음 짠 코드는 다음과 같다.
+
+```js
+const n = 5;
+function solution(n) {
+  const arr = [0, 1];
+  while (arr.length !== n + 1) {
+    const Arrlength = arr.length;
+    arr.push((arr[Arrlength - 1] + arr[Arrlength - 2]));
+    
+  }
+  return arr[arr.length - 1] % 1234567;
+}
+```
+
+그러나 이렇게 해결하려고 하자 효율성테스트에서 모두 불합격 하였다. n은 100,000까지 나올 수 있다.
+
+그렇게 되면 100,000번째 피보나치수열은 너무 거대해 %1234567에서 오류가 발생하는 것이다.
+
+오를 오버플로우 라고한다. 이 숫자들은 32비트 정수 범위를 넘기때문에 모든 단계에 %연산을 사용해야한다.
+
+그렇게 수정한 코드는 
+```js
+const n = 5;
+function solution(n) {
+  const arr = [0, 1];
+  while (arr.length !== n + 1) {
+    const Arrlength = arr.length;
+    arr.push((arr[Arrlength - 1] + arr[Arrlength - 2]) % 1234567;);
+    
+  }
+  return arr[arr.length - 1];
+}
+```
+위 코드이다. push를 하기전에 각 원소를 더해주는 과정에서 먼저 % 연산을 활용하여 값이 일정 이상 커지지 않게 만들었다. 
+
+## 다음큰숫자
+
+문제만 이해하면 쉬운문제이다! 
+
+![](https://velog.velcdn.com/images/tkdgk1996/post/5988637a-a7cc-4e38-aabc-2337aa56650f/image.03)
+
+해당 문제는 이전에 풀었을 때도 풀었었고 지금의 코드와 크게 다르지 않았다.
+
+논리는 다음과 같다.
+1. n을 toString() 메서드를 이용하여 이진법으로 나타낸 후 배열로 변환, 그때 "1"만 filter하여 그 배열의 길이를 반환한다.
+2. 그리고 for문을 만들어 n+1을 시작으로 1,000,000 까지 순환하도록 만든 후 
+3. 해당 i의 이진법 변환, 배열화 후 "1"만 필터링하여 위 n의 길이와 같은지 확인한다! 
+
+코드는 다음과 같다.
+```js
+const n = 78;
+
+function solution(n) {
+  const oneCount = n
+    .toString(2)
+    .split(``)
+    .filter((item) => item === "1").length;
+
+  for (let i = n + 1; i < 1000000; i++) {
+    if (
+      i
+        .toString(2)
+        .split(``)
+        .filter((item) => item === "1").length === oneCount
+    ) {
+      return i;
+    }
+  }
+}
+
+solution(n);
+```
+
 
 

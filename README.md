@@ -766,5 +766,284 @@ function solution(n) {
 solution(n);
 ```
 
+## 짝지어제거하기
 
+![](https://velog.velcdn.com/images/tkdgk1996/post/a7ca9fe7-bb72-4859-8f9d-c77a2c350dcd/image.05)
+
+위 문제는 스택문제였다.
+
+스택 Arr을 생성하여 배열을 순회하면서 이전의값들과 비교 후 스택 Arr을 제거해나가면된다.
+
+이 문제는 이전에도 풀었었고 논리도 그 전과크게 다르지 않았다
+
+```js
+function solution(s) {
+  const Arr = s.split(``);
+  const check = [];
+  for (let i = 0; i < Arr.length; i++) {
+    if (check[check.length - 1] === Arr[i]) {
+      check.pop();
+      continue;
+    }
+    check.push(Arr[i]);
+  }
+
+  return check.length === 0 ? 1 : 0;
+}
+```
+위 코드는 처음 풀었던 코드이다. continue를 통해 if를 최대한 두번 안쓰려고 노력했다
+우아한테크코스 프리코스에서 if와 else는 최대한 지양하는 것이 좋다고 배웠기 때문이다.
+ 그럼에도 비교를 위해 else를 써보았는데 이 문제에선 그게 더 효율성이 좋게 나왔다.
+ 
+ else를 사용한 문제풀이
+ ```js
+
+
+function solution(s) {
+  const Arr = s.split(``);
+  const check = [];
+  for (let i = 0; i < Arr.length; i++) {
+    if (check[check.length - 1] === Arr[i]) {
+      check.pop();
+    } else {
+      check.push(Arr[i]);
+    }
+  }
+
+ return check.length === 0 ? : 1 : 0
+}
+```
+
+문제별로 else를 썼을 때 더 나은 효율을 보일 수 있나보다
+
+그리고 또 하나 배운점은 for문에서 ++ 와 +=1 의 비교이다.
+
+++보다 +=1 의 효율성이 더 높게나왔다. 이것 역시 문제별로 달라 
+
+혹시 효율성 문제에서 통과하지 못했을 때 위 두 가지를 변경해 보아야겠다.
+
+그리고 처음에는 forEach로 접근했었는데 
+
+forEach보다는 for문이 더 나은 효율성을 보였다.
+
+## 영어끝말잇기
+
+이 전에도 풀어본 문제지만 이번에 새롭게 풀 때 효율성이 많이 개선되어 기분이 좋았다.
+
+이 문제는 약간 타당성검사와 비슷한 문제이다. 몇가지 조건에 따라 return 값이 달라진다
+
+먼저 과거에 내가 풀었던 코드를 보겠다!
+
+```js
+function findFailPerson(index, n) {
+  const answer = [];
+  const person = (index + 1) % n;
+  const personOrder = Math.ceil((index + 1) / n);
+
+  if (person === 0) {
+    answer.push(n, personOrder);
+  }
+  if (person !== 0) {
+    answer.push(person, personOrder);
+  }
+
+  return answer;
+}
+
+function findWordLength(wordArr) {
+  if (wordArr.length < 2) {
+    return false;
+  }
+}
+
+function findWordDuplicate(word, checkDupArr) {
+  if (checkDupArr.includes(word)) {
+    return false;
+  }
+  checkDupArr.push(word);
+}
+
+function findWordLine(wordArr, checkLineArr, index) {
+  const wordArrLastIndex = wordArr.length - 1;
+  const checkLineArrLastIndex = checkLineArr.length - 1;
+
+  if (index !== 0 && checkLineArr[checkLineArrLastIndex] !== wordArr[0]) {
+    return false;
+  }
+  checkLineArr.push(wordArr[wordArrLastIndex]);
+}
+
+function solution(n, words) {
+  const checkDupArr = [];
+  const checkLineArr = [];
+  let index = 0;
+
+  for (index; index < words.length; index++) {
+    const wordArr = words[index].split(``);
+    if (findWordLength(wordArr) === false) {
+      console.log("asdd");
+      return findFailPerson(index, n);
+    }
+    if (findWordDuplicate(words[index], checkDupArr) === false) {
+      return findFailPerson(index, n);
+    }
+    if (findWordLine(wordArr, checkLineArr, index) === false) {
+      console.log("Ads");
+      return findFailPerson(index, n);
+    }
+    console.log(wordArr);
+  }
+  return [0, 0];
+}
+
+```
+이때는 뭔가..함수를 나누는데 심취해있었던 거 같다.. 결과적으로 이렇게 나눴던 부분이 더 좋지 않은 효율을
+만들었다. 하지만 이때의 내 코드도 꽤 마음에 든다! 생각보다 길어서 당황했지만 하나하나 보다보니
+어떤 역할을 하는 함수인지 보이긴한다.ㅎㅎㅋㅋ
+
+아래는 오늘 새롭게 푼 풀이이다.
+
+```js
+function solution(n, words) {
+  const check = [];
+  for (let i = 0; i < words.length; i++) {
+    if (words[i].length === 1) {
+      return [(i % n) + 1, Math.ceil((i + 1) / n)];
+    }
+
+    if (check.includes(words[i])) {
+      return [(i % n) + 1, Math.ceil((i + 1) / n)];
+    }
+    const checkLastIndex = check.length - 1;
+
+    check.push(words[i]);
+
+    if (i > 0) {
+      if (
+        check[checkLastIndex].charAt(check[checkLastIndex].length - 1) !==
+        words[i].charAt(0)
+      ) {
+        return [(i % n) + 1, Math.ceil((i + 1) / n)];
+      }
+    }
+  }
+  return [0, 0];
+}
+```
+함수를 나누지 않았을 뿐 과정은 비슷하다.
+
+논리는 이렇다. 
+
+1. 이전에 등장했던 단어를 찾는 조건문이 필요
+ - 배열을 includes 함수로 확인하면 되겠다.
+ 2. 이어지지않는 단어 찾는 조건문이필요
+ - stack 처럼 배열을 순회하며 stack arr에 넣어  stack arr의 마지막 인덱스 값과 for문 i 인덱스의 값을 비교하면되겠다.
+ 3. 한 글자인지를 찾는 조건문이 필요
+ - for문 속에서 length를 거르는 조건문이 필요
+ 
+ 그리고 Math.ceil,charAt 등으로 디테일한 부분을 구현하였다.
+ 
+ 다른 분들이 푼 풀이를 보니 slice로 푼 풀이가 많이 보였다. 그래서 간단하게
+ slice와 splice를 비교하여 학습해보았다.
+ 
+ ### splice vs slice
+ 
+ - slice 
+ slice 메소드는 시작부터 끝까지를 프로퍼티로 받아 새로운 배열을 반환한다. 
+ ~~_이때, 원본 배열은 수정되지 않는다!! _~~
+ 
+ -splice
+ splice 메소드는 기존의 배열을 삭제 또는 추가가 가능하다.
+ ~~_즉 원본배열은 수정된다._~~
+ splice(시작인덱스,제거할 요소의 수 , 추가할 요소)
+  
+```js
+let arr =[1,2,3,4]
+
+const arr2 = arr.splice(0,2,"5")
+
+console.log(arr) //[3,4,5]
+console.log(arr2) //[1,2]
+
+ ```
+ 즉 원본은 잘려나가고 또, 잘려나간 부분은 새로운 변순에 할당하여 가져올 수 있다.
+ 대신 splice는 효율적으로 꽤 불리하다
+ 
+ ## 구명보트
+ 
+ 이 문제는 저번에 풀었을 때 실패했었다. 그래서 다른 분들이 풀어놓은 코드를 보고 학습했었는데
+ 기억이 잘 나지않아.. 이번에도 헤멨다..
+ 문제를 제대로 읽지 않아서 더욱 더 헤멨다..
+ 
+ 문제는 다음과 같다.
+ 
+ ![](https://velog.velcdn.com/images/tkdgk1996/post/1755bc0e-017b-47f4-aa6f-acb9f94c15cf/image.png)
+ 
+ 위에 최대 2명씩인 것을 빼먹고 혼자 아주 골머리를 앓았다..
+ 역시 문제를 꼼꼼히 읽어보는 자세가 중요하다..
+ 처음 저 문제를 봤을 때 그냥 최대한 많이 태우는게 중요하니까 몸무게가 조금 나가는 사람을
+ 최대한 태우고 몸무게가 많이 나가는 사람은 1명씩 태우면 되지않나? 라는 생각을 했다.
+ 
+ 내 논리는 이랬다.
+ 1. sort메서드를 이용하여 몸무게가 작은 순서대로 정렬하고 앞에서부터 더해
+ 2. limit를 넘어서면 그때 count를 하는 방법
+ 
+ 근데 이 방법은 완전히 잘못됐다..
+ 
+ 사실 최대한 limit에 근접하게 태워야 가장 적은 횟수로 사람들을 옮길 수 있다. 
+ 
+ 그렇게 하기 위해서 문제는 2명만 태울 수 있다고 친절하게 설명해준다.
+ 
+ 그렇다면 가장 몸무게가 적은사람과 가장 많이나가는 둘을 합쳤을 때 limit에 가장 근접할 것이다! 
+ 
+ 30,40,60,70 이고 limit이 100이라면
+ 
+ sort를 한 뒤 맨 앞 요소와 맨 뒤 요소가 limit 을 넘어가지 않는다면 pop, shift로 배열을 변경하고
+ 반복문을 초기화하면된다.
+ 
+ 코드는 다음과 같다! 
+ 
+ ```js
+function solution(people, limit) {
+  let Arr = people.sort((a, b) => a - b);
+  let count = 0;
+  for (let i = 0; i < people.length; i++) {
+    if (Arr[0] + Arr[Arr.length - 1] <= limit) {
+      Arr.pop();
+      Arr.shift();
+      i = 0;
+      count = count + 1;
+    } else if (Arr[0] + Arr[Arr.length - 1] > limit) {
+      Arr.pop();
+      i = 0;
+      count = count + 1;
+    }
+  }
+  return count + Arr.length;
+}
+```
+ 양쪽을 비교 후 limit 이 넘으면 shift만
+ 넘지않으면 pop과 shift를 사용하면된다! 
+ 
+ 아쉬운 점은 for문 보다는 while 문이 더 적합했을 거 같아 코드를 다시 구성해보았다.
+ 
+ ```js
+function solution(people, limit) {
+  let Arr = people.sort((a, b) => a - b);
+  let count = 0;
+  while(Arr.length<2){
+    if (Arr[0] + Arr[Arr.length - 1] <= limit) {
+      Arr.pop();
+      Arr.shift();
+    } else if (Arr[0] + Arr[Arr.length - 1] > limit) {
+      Arr.pop();
+    }
+  count = count + 1;
+  }
+  return count + Arr.length;
+}
+```
+이렇게 while 문을 사용하면 i를 초기화해주지않아도 된다!! 
+
+다른 분들의 코드도 보통 이런 논리로 문제를 해결했다.
 

@@ -1047,3 +1047,138 @@ function solution(people, limit) {
 
 다른 분들의 코드도 보통 이런 논리로 문제를 해결했다.
 
+## 카펫
+
+![](https://velog.velcdn.com/images/tkdgk1996/post/250c15ab-7e7a-4af6-9ece-43e6b0bdf6d8/image.png)
+
+이 문제는 완전탐색 카테고리로 분류되어 있었다. 완전 탐색이란 반복문을 사용하여 말 그대로 경우의 수를 구하는 문제이다. 
+필자는 이 문제에서 구해야 하는 것은 전체 카펫의 가로길이와 세로길이임을 알고
+규칙이 있을 거란 생각을 했다. 내가 발견한 규칙은 다음과 같다.
+
+> 1. x, y를 사용한 연립방정식으로 풀수있겠다.
+2. 여기서 x는 yellow의 가로길이 y는 yellow의 세로길이이다.
+3. x+y = (brown-4)/4
+4. xy = yellow 
+
+즉, yellow의 가로길이와 세로길이를 알게 되면 전체 카펫의 가로, 세로길이는
+
+yellow가로 +2 , yellow세로 +2 
+
+가 될 것이다!
+
+그렇게 내가 생각한 코드는 
+
+```js
+function solution(brown, yellow) {
+  const plus = (brown - 4) / 2;
+  let x = 0;
+  let y = 0;
+  for (let i = 1; i <= plus; i++) {
+    y = plus - i;
+    //y = plus-x
+    if (i * y === yellow) {
+      //xy= yellow
+      x = i;
+      break;
+    }
+  }
+  return [x + 2, y + 2].sort((a, b) => b - a);
+}
+```
+저번 시간에 학습해두었던 let의 재할당에 대한 개념을 사용하니 풀이가 이 전보다 더 간결해진거 같다.
+
+const , let , var에 대한 설명은 (2)에 정리해놓았다.
+
+또, 다른 분들의 코드를 보니 Math.sqrt와 Math.pow를 사용하신 분이 많이 계셔서 이 두 메서드에 대한 정리를 해보았다.
+
+### Math.sqrt
+위 메서드는 number 에 루트를 씌워주는 메서드이다.
+
+사용법은 다음과 같다.
+
+```js
+console.log(Math.sqrt(36))
+//return 6
+
+```
+
+### Math.pow
+위 메서드는 number에 제곱근을 시켜주는 메서드이다.
+
+사용법은 다음과 같다.
+
+```js
+console.log(Math.pow(2,3))
+//return 8
+```
+
+## 예상대진표
+
+예상 대진표 문제는 그냥 월드컵에서 D조에 있는 팀을 몇번째에 만날 수 있나!! 
+
+이 말과 동일했다. 최근 월드컵을 보면서 혼자 생각을 해본적이 있어서 로직을 더 쉽게 짤 수 있었다.
+
+저번에 풀었을 때는 사실 해결하지 못해 질문하기에 있는 답을 긁어왔던 기억이 난다.
+
+이번에는 좀 더 생각을 해보니 다음과 같은 logic을 생각할 수 있었다.
+
+> 1,2 3,4 5,6 7,8
+
+위 모두 조로 생각을 했을 때 1조 2조=> 1조로, 3조4조는=> 2조로 5조6조 => 3조, 7조8 => 4조로 
+
+결국 이건 2로 나눈 몫에 올림을 한 결과같이 같아야 경기때 만나는 구나 라고 생각을 했다.
+
+```js
+let n = 8;
+let a = 4;
+let b = 7;
+
+function solution(n, a, b) {
+  let count = 0;
+  while (true) {
+    a = Math.ceil(a / 2);
+    b = Math.ceil(b / 2);
+    count = count + 1;
+    if (a === b) {
+      return count;
+    }
+  }
+}
+```
+
+다른 분들의 코드도 위와 같은 로직으로 해결을 했다!!🔥🔥🔥
+
+## N개의최소공배수
+
+위 문제는 배열로 숫자가 주어졌을 때 이 들의 최소 공배수를 구하면 된다.
+
+결국, 가장 큰 수를 나머지 배열원소로 나누었을 때 모두 나머지가 0일 때 그때의 가장 큰 수의 배수가 
+최소 공배수가 된다.
+
+logic은 다음과 같다.
+> 1. 배열의 최대값을 꺼내온다. (Math.max 함수를 이용)
+2. 최대값을 제외한 하나의 배열을 만든다.
+3. 만든 배열을 순회하며 최대값을 나눈다.
+4. 나머지가 0이 아닌게 있다면ㅁ 최대값에 최대값을 더 한후 처음부터 순회한다.
+5. 만약 모두 나머지가 0이라면 그때의 최대값을 리턴한다.
+
+```js
+function solution(arr) {
+  const Max = Math.max(...arr);
+  let plusMax = Math.max(...arr);
+  //한 번 더 같은 값을 다른 변수에 저장한 이유는
+  //plusMax는 계속 변해야하지만 Max값은 고정되어야하기때문이다.
+  let check = [];
+
+  const filterArr = arr.filter((item) => item !== Max);
+  // 최대값을 제외한 하나의 배열을 만든다.
+  while (true) {
+    check = filterArr.filter((item) => plusMax % item === 0);
+    //for문으로 i를 리셋하는 형식으로하면 더 효율을 높일 수 있을 거 같다.
+    if (check.length === filterArr.length) {
+      return plusMax;
+    }
+    plusMax = plusMax + Max;
+  }
+}
+```

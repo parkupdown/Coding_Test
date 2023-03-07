@@ -1182,3 +1182,213 @@ function solution(arr) {
   }
 }
 ```
+프로그래머스 코딩 문제를 풀면서 자료구조에 대한 이해없이 코드를 짜왔다.
+그렇게 풀어왔던 내 모습이 드디어.. 약점으로 돌아왔다.
+ DFS, BFS, 완전탐색, 해시태이블 등 CS지식이 전혀 없던터라 위 자료구조가 왜 필요한지도
+ 잘 몰랐다. 지금은 자료구조는 그저 로직을 짜는데 필요한 방법으로 이해하고 있다.
+ 
+ 이번 블로그글에서는 재귀함수와 DFS,BFS에 대해 알아 볼 것이다. 
+ 너무너무 힘들었기 때문에 필자도 이를 작성하면서 이해한 내용을 기억하고 되새김질 해보고 싶다.
+ 
+ 필자는 BFS/ DFS 이전에 재귀함수에 대해서도 무지했었다. 재귀함수를 사용해 문제를 풀어본 적이없어
+ 재귀적 사고능력이 전혀없었다. 먼저 자바스크립트가 어떻게 작동하는지도 몰랐던 거 같다.
+ 
+  CS를 학습하면서 자바스크립트의 작동방법도 공부할 수 있었던 건 희재일까?.. 
+  
+  먼저 "이벤트 루프" 를 학습했다.
+  
+  ## 이벤트 루프
+  
+>   먼저 이벤트 루프란 Callback Event Queue에서 하나씩 꺼내서 동작시키는 loop이다.
+
+자바스크립트는 싱글 스레드 기반 언어이기 때문에, 한번에 하나씩 작업을 진행한다.
+호출스택을 하나만 사용한다.
+
+전체적으로 자바스크립트가 작업하는 순서는 다음과 같다!! 
+
+![](https://velog.velcdn.com/images/tkdgk1996/post/97421e8e-9132-49f6-9a8a-8ab084398dcd/image.png)
+[출처](https://www.youtube.com/watch?v=v67LloZ1ieI&t=320s)
+
+여기서 Heap은 변수와 객체를 저장하는 저장소라고 생각하면 된다.
+
+1. Call Stack은 먼저 함수가 실행되면 저기 Stack에 먼저 함수들이 차곡차곡 쌓인다.
+
+2. 그리고 난 후 동기적 함수들은 실행이 된다. 
+
+3. 비동기적 함수는 대기실을 거쳐 Queue로 순서대로 들어가고
+
+4. Call stack이 비어있으면 Queue에서 준비 된 함수들이 Call stack으로 들어온다.
+
+5. 이때 Call Stack이 비어있어야 Queue의 함수가 들어올 수 있다.
+
+
+이 과정을 이벤트루프가 전담해주는 것이다.
+
+
+![](https://velog.velcdn.com/images/tkdgk1996/post/1e3b4335-afbf-4187-8f55-12e82ea9205f/image.png)
+
+
+
+<hr/>
+
+
+
+힙: 메모리 할당이 일어나는 부분 ( 변수, 객체들이 저장되는 일종의 창고 ) 
+호출 스택 : 코드가 호출스택에 쌓인다.
+테스크 큐 : 그 다음 테스크 큐에 넘겨준다.
+호출 스택이 없을 때 테스크 큐에서 콜백함수가 콜 스택으로 넘어감
+
+이때 호출스택이 비어있으면 먼저 들어온 순서대로 콜백 큐에 있는 콜백 함수들을 호출한다.
+
+
+많이 도움을 받은 자료
+[이벤트루프](https://zereight.tistory.com/855)
+[자바스크립트동작원리](https://www.youtube.com/watch?v=v67LloZ1ieI&t=320s)
+[피터의 이벤트루프](https://www.youtube.com/watch?v=wcxWlyps4Vg&ab_channel=%EC%9A%B0%EC%95%84%ED%95%9CTech )
+
+위 내용을 알아야 재귀함수에 대해 이해가 가능하다.
+
+내용을 토대로 팩토리얼을 구현하는 함수를 짜보았다! 
+
+<hr>
+
+```js
+function factorial(number){
+  if(number===1){
+    return 1
+  }
+
+  
+ return number*factorial(number-1)
+  
+}
+factorial(6)
+```
+작동 순서는 다음과 같다
+
+
+그렇다면 스택엔 이렇게 쌓일 것이라 생각했다. 
+
+ call stack
+
+2 x factorial(1)
+3 x factorial(2)
+4 x factorial(3)
+5 x factorial(4)
+6 x factorial(5)
+
+하지만 다시 생각해보니 stack에 쌓이지 않고 바로바로 실행이 될 것이라 생각한다.
+ 즉, 6 x factorical(5) 실행 => 6 x 5 x factorial(4) 실행 => 6 x 5 x 4 x factorial(3)
+ 
+ 스택에 쌓이지 않고 한 층에서 계속 이러한 함수가 반복 될 것으로 보인다.
+ 
+ 그렇다면 내가 애를 먹었던 문제에서는 어떻게 적용이 가능할까
+ 
+ 
+## 타겟넘버
+
+![](https://velog.velcdn.com/images/tkdgk1996/post/fa3fcaf9-ff98-47dd-80ff-2a2f52ab5706/image.png)
+
+문제를 처음 접했을 때 for문을 몇번을 돌려야 이 문제를 풀수 있나 고민했다. 그렇지만 재귀함수를 배운 후 다음과 같이 코드를 짤 수 있었다. 
+
+```js
+const numbers = [1, 1, 1, 1, 1];
+const target = 3;
+
+function solution(numbers, target) {
+  let answer = 0;
+  function DFS(index, sum) {
+    if (index === numbers.length) {
+      if (sum === target) {
+        answer = answer + 1;
+      }
+      return;
+    }
+
+    DFS(index + 1, sum + numbers[index]);
+    DFS(index + 1, sum - numbers[index]);
+  }
+  DFS(0, 0);
+
+  return answer;
+}
+```
+
+위 코드를 하나씩 순서대로 정리해보겠다..(왜냐면 이 코드를 보고도 제대로 이해하지 못했었기 때문이다.)
+
+먼저 DFS가 함수 내부에서 두 번 실행 되었다. 그렇다면 매번 두 번 실행이 될까? 정답은 그렇지않다!!
+
+여기서 Call Stack의 개념이 나온다.
+
+solution(number,target)을 하게 되면 다음 순서와 같이 실행된다.
+
+
+> DFS(index+1 , sum + numbers[index]) ---실행 (왜 계속 실행? index가 numberlength와 같지않으니까!)
+DFS(index+1, sum - numbers[index]) --- Call stack에 저장 (아직 사용되지않음)
+
+call Stack 
+
+DFS(index+1,sum-numbers[index])
+
+위 와 같이 계속 반복된다면 이렇게 정리된다
+
+> DFS(0+1, 0 + numbers[0])--실행 (index===1 , sum === 1 )
+
+callStack
+
+DFS(0+1, 0-1)
+
+> DFS(1+1, 1 + numbers[1])--실행 (index===2 , sum === 2 )
+
+callStack
+
+DFS(1+1, 1-1)
+DFS(0+1, 0-1)
+
+> DFS(2+1, 2 + numbers[2])--실행 (index===3 , sum === 3 )
+
+callStack
+
+DFS(2+1, 2-1)
+DFS(1+1, 1-1)
+DFS(0+1, 0-1)
+
+> DFS(3+1, 3 + numbers[3])--실행 (index===4 , sum === 4 )
+
+callStack
+
+DFS(3+1, 3-1)
+DFS(2+1, 2-1)
+DFS(1+1, 1-1)
+DFS(0+1, 0-1)
+
+> DFS(4+1, 4 + numbers[4])--실행 (index===5 , sum === 5 )
+
+이때, index가 5가 됨으로 두 번째 DFS(index+1, sum - numbers[index]) 가 실행됨!
+
+그럼  DFS(4+1, 5-1) 실행  (index===5 , sum===4) 그 후
+
+이때 call stack의 맨 위 DFS(3+1, 3-1)이 차례로 실행된다 (index===4, sum===2) 
+
+그럼 index가 5가 아님으로 다시 위의 DFS(index+1,sum+numbers[index]) 가 실행된다.
+
+그렇게 DFS(4+1, 2+1) 
+
+위 반복 처럼 call stack에 있는 - 연산을 기점으로 계속 탐색하는 구조였다.
+
+Call Stack에 대한 이해가 부족하여 해당 문제를 어려워 했었다. 
+
+
+![](https://velog.velcdn.com/images/tkdgk1996/post/20b81154-6464-4508-9f71-385170ad3c7b/image.png)
+
+결국엔 위 그림과 같이 각 경우마다 모두 탐색을 시켜주는 알고리즘 인 것이다. 
+
+이 문제를 풀 때 가장 많이 도움을 받은 블로그 작성자 분에게 감사하다!
+[블로그](https://jjnooys.medium.com/%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%A8%B8%EC%8A%A4-%ED%83%80%EA%B2%9F-%EB%84%98%EB%B2%84-javascript-1d7983d423b5)
+
+
+이렇게 계속해서 파고들면서 그 가지를 다 알아보는 것이 DFS (깊이우선탐색)
+
+가장 가까운 가지를 먼저 알아보면서 파고드는 것이 BFS(너비우선탐색) 이다
+
+위 두 가지는 또 학습을 해보아야겠다.. 아직 재귀함수와 지금 까지 배운 것들을 정리하는 시간이 필요해보인다!

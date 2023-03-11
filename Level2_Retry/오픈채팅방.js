@@ -8,24 +8,28 @@ let record = [
 
 function solution(record) {
   record = record.map((item) => item.split(` `));
-  let answer = new Map();
-  const answerArr = [];
+  const answer = [];
+  let info = new Map();
 
-  for (let i = 0; i < record.length; i++) {
-    if (record[i][0] === `Enter`) {
-      answer.set(record[i][1], record[i][2]);
-      answerArr.push([record[i][1], record[i][0]]);
+  record.forEach((item) => {
+    if (item[0] !== "Leave") {
+      info.set(item[1], item[2]);
     }
-    if (record[i][0] === `Leave`) {
-      answer.set(record[i][1], record[i][2]);
-      answerArr.push([record[i][1], record[i][0]]);
+  });
+
+  info = [...info];
+
+  const infoId = info.map((item) => item[0]);
+
+  record.forEach((item) => {
+    const recordId = infoId.indexOf(item[1]);
+    if (item[0] === "Enter") {
+      answer.push(`${info[recordId][1]}님이 들어왔습니다.`);
+    } else if (item[0] === "Leave") {
+      answer.push(`${info[recordId][1]}님이 나갔습니다.`);
     }
-    if (record[i][0] === `Change`) {
-      const Index = answerArr.indexOf(answer.get(record[i][1]));
-      answer.set(record[i][1], record[i][2]);
-      answerArr[Index] = answer.get(record[i][1]);
-    }
-  }
-  answer = [...answer];
+  });
+
+  return answer;
 }
 solution(record);

@@ -1392,3 +1392,181 @@ Call Stack에 대한 이해가 부족하여 해당 문제를 어려워 했었다
 가장 가까운 가지를 먼저 알아보면서 파고드는 것이 BFS(너비우선탐색) 이다
 
 위 두 가지는 또 학습을 해보아야겠다.. 아직 재귀함수와 지금 까지 배운 것들을 정리하는 시간이 필요해보인다!
+
+## 압축
+![](https://velog.velcdn.com/images/tkdgk1996/post/5a7e69e5-e0cf-497e-befb-b427e6240763/image.png)
+
+
+위 문제는 내용을 이해해야 풀 수 있는 문제였다. 처음에는 문제를 이해하지 못해 시간을 꽤 보냈다. 
+
+문제에서는 String이 주어지고 위 스트링의 각 index를 하나씩 순회하며 
+만약 해당 index까지의 누적된 string이 사전 ARR에 없다면 해당 누적 string을 사전에 넣어준 후
+해당 index 이전의 target의 색인번호를 answer에 추가해주면 되는 로직이었다.
+
+문제를 이해만 하면 구현은 그렇게 어렵지 않았던 거 같다. 코드는 다음과 같다.
+
+```js
+
+const msg = "KAKAO";
+
+function solution(msg) {
+  const Alpabet = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+  ];
+  const index = [
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+    22, 23, 24, 25, 26,
+  ];
+  //Alpabet arr과 색인번호 index arr을 생성하였다.
+  
+  const answer = [];
+  let target = "";
+// target은 재선언이 가능하도록 하기 위해 let으로 변수를 선언하였다.
+  for (let i = 0; i < msg.length; i++) {
+    target = target + msg[i];
+    //for문이 돌면서 target이 재선언된다
+    if (Alpabet.includes(target) === false) {
+      // 만약 target이 alpabet 사전에 없으면!!!
+      Alpabet.push(target);
+      //사전에 추가
+      index.push(index.length + 1);
+      //index에 추가 (색인번호)
+      answer.push(index[Alpabet.indexOf(target.slice(0, -1))]);
+      // 더해지기 전의 타겟의 index를 출력
+      target = msg[i];
+      //타겟은 그 시점부터 다시 시작되고
+
+      //해당 타겟은
+    }
+  }
+  if (Alpabet.includes(target)) {
+    answer.push(index[Alpabet.indexOf(target)]);
+  }
+  // 만약 반복문이 끝났는데 target이 남아 있다면 해당 색인 번호까지 answer에 push
+
+  return answer;
+}
+solution(msg);
+```
+
+이 문제를 풀면서 재언선, slice 등에 대해 다시 공부할 수 있었고 또, 공책에 문제를 쓰고 난 후 코딩을 시작하는 습관을 
+기를 수 있었다.
+
+## 할인행사
+
+![](https://velog.velcdn.com/images/tkdgk1996/post/a65d3b8f-6468-4520-9e25-2334b3267725/image.png)
+
+위 문제 역시 문제를 이해하는 것이 중요했다. 
+
+로직은 다음과 같다.
+
+* 처음 물건을 산 날짜를 포함하여 10일간 할일 혜택을 받을 수 있기 때문에 10일을 반복문 돌렸을 때 
+ 사야하는 물건들이 다 빠져야한다.
+ * 그렇다면 총 discount arr에서 - 10 이 되는 for문이 1개 필요하고
+ * 10번 돌 수 있는 for문이 필요하다.(10일간혜택임으로)
+* 이중 포문을 활용하여 사야하는 수량이 담긴 numberArr 과 원하는 물품이 담긴 want Arr을 순회하며
+ 원하는 물품이 있을 때 마다 number 의 해당 index의 데이터를 -1 
+ * number의 모든 데이터가 0인 배열의 수를 return 하면 되겠다.
+ 
+ 
+필자가 짠 코드는 다음과 같다. 
+
+```js
+let want =["banana", "apple", "rice", "pork", "pot"]
+let number = [3, 2, 2, 2, 1];
+let discount = ["chicken", "apple", "apple", "banana", "rice", "apple", "pork", "banana", "pork", "rice", "pot", "banana", "apple", "banana"]
+function solution(want, number, discount) {
+  let answer = [];
+  for (let i = 0; i <= discount.length - 10; i++) {
+    let checkArr = number.map((item) => item);
+    //이렇게 하지 않으면 재선언되어 number가 기존의 number로 원상복구되지않는다.
+    for (let j = i; j < i + 10; j++) {
+      const numberIndex = want.indexOf(discount[j]);
+      if (want.includes(discount[j]) && checkArr[numberIndex] !== 0) {
+        checkArr[numberIndex] = checkArr[numberIndex] - 1;
+      }
+    }
+    answer.push(checkArr.reduce((acc, cur) => acc + cur));
+  }
+
+  answer = answer.filter((item) => item === 0);
+
+  return answer.length < 1 ? 0 : answer.length;
+}
+solution(want, number, discount);
+```
+
+위 문제를 풀면서 재할당에 대해 다시 생각하게 되었다 처음엔
+```js
+checkArr = number
+
+//이렇게 바로 재선언을 해버리니 number는 원본으로 복구되지않고 수정된 시점부터 계속 영향을 받았다.
+
+```
+
+그렇게 하여 for문이 순회할 때 마다 map으로 새로운 배열을 생성하듯이 저장해 주니 원하는 결과를 얻을 수 있었다.
+
+
+## K진수게임
+
+![](https://velog.velcdn.com/images/tkdgk1996/post/2861e302-2776-4358-9285-921d73a51383/image.png)
+
+1. 해당 문제는 k진수로 변환한 후 M(게임 참가하는 인원) , t(순서) 임으로 mt까지 string을 잘라주어야한다. (이떄 완전하게 원하는 만큼만 자를 순 없다 , string 상태로 결과값을 받아오기 때문에 M*t와 같거나 큰 순간에 잘라주어야한다.) 
+
+
+2. 그 후 만들어진 string을 다시 한번 slice 메서드로 잘라주고 대문자로 변환, 배열로 만들어준 후 
+
+3. filter 메서드를 활용하여 index % M ===p(튜브순서)-1 로 잘라낸다음
+
+4. join 메서드로 sting화 시켰다.
+
+```js
+function solution(n, t, M, p) {
+  let target = "";
+  let keepGoing = true;
+  // boolean함수를 집어넣어 while문을 컨트롤했다.
+  while (keepGoing) {
+    for (let i = 0; i < 123123; i++) {
+      target = target + String(i.toString(n));
+      if (target.length >= M * t) {
+        keepGoing = false;
+        break;
+      }
+    }
+  }
+  target = target
+    .slice(0, M * t)
+    .toUpperCase()
+    .split(``)
+    .filter((item, index) => index % M === p - 1)
+    .join(``);
+  return target;
+}
+```
+
+

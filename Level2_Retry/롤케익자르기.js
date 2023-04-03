@@ -2,11 +2,21 @@ let topping = [1, 2, 1, 3, 1, 4, 1, 2];
 function solution(topping) {
   const stack = [];
   let count = 0;
+  let you = [...new Set(topping)].length;
+  let me = 0;
   while (topping.length > 0) {
-    stack.push(topping.pop());
-    const front = [...new Set(stack)];
-    const back = [...new Set(topping)];
-    front.length === back.length ? (count = count + 1) : null;
+    const remove = topping.pop();
+    if (!stack.includes(remove)) {
+      stack.push(remove);
+      me = me + 1;
+    }
+    if (!topping.includes(remove)) {
+      you = you - 1;
+    }
+    console.log(you, me);
+    if (you === me) {
+      count = count + 1;
+    }
   }
   return count;
 }

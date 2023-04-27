@@ -1,5 +1,5 @@
-let priorities = [1, 1, 9, 1, 1, 1];
-let Location = 3;
+let priorities = [2, 3, 1, 2, 4, 5, 2, 4];
+let Location = 4;
 
 function solution(priorities, Location) {
   const Max = Math.max(...priorities);

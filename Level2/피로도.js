@@ -4,16 +4,21 @@ const dungeons = [
   [50, 40],
   [30, 10],
 ];
-
 function solution(k, dungeons) {
-  let target = k;
-  let minNum = 1000;
-  for (let i = 0; i < dungeons.length; i++) {
-    const filtered = dungeons.filter((item) => item <= target);
+  const Pass = [];
 
-    filtered.forEach((item,index) => {
-if(item[1])
+  //k가 가능한지를 먼자 찾자
+  while (Pass.length < 3) {
+    const canSolveDG = dungeons
+      .map((dungeon) => {
+        if (dungeon[0] <= k) {
+          return dungeon;
+        }
+      })
+      .sort((a, b) => a[1] - b[1]);
 
-    });
+
+
+
   }
 }

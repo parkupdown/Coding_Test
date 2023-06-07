@@ -54,20 +54,22 @@ function solution(A, B) {
   let index = 0;
   let count = 0;
 
-  A.sort((a, b) => a - b);
-  B.sort((a, b) => a - b);
+  A.sort((a, b) => b - a);
+  B.sort((a, b) => b - a);
 
   while (true) {
-    if (index === B.length) {
+    const ALast = A.length - 1;
+    const Blast = B.length - 1;
+    if (A.length === 0 || B.length === 0) {
       return count;
     }
-    if (A[0] < B[index]) {
-      A.shift();
-      B.splice(index, 1);
+    if (A[ALast] < B[Blast]) {
+      A.pop();
+      B.pop();
       count = count + 1;
-      index = 0;
-    } else {
-      index = index + 1;
+    }
+    if (A[ALast] >= B[Blast]) {
+      B.pop();
     }
   }
 }

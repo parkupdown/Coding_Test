@@ -1,4 +1,40 @@
 function solution(n, stations, w) {
+  let arr = [];
+  let index = 0;
+  let answer = 0;
+  let current = 0;
+
+  if (stations[0] === 1) {
+    current = 1 + w;
+    index = index + 1;
+  }
+
+  const lastIndex = stations.length - 1;
+
+  while (true) {
+    if (index === stations.length) {
+      // 이때 n과 stations의 lastIndex의 관계에 따라 값이 달라진다.
+      if (stations[lastIndex] !== n) {
+        arr.push(n - current);
+      }
+      break;
+    }
+
+    arr.push(stations[index] - w - current - 1);
+    current = stations[index] + w;
+    index = index + 1;
+  }
+
+  arr = arr.filter((item) => item > 0);
+
+  const range = 2 * w + 1;
+
+  arr.forEach((item) => (answer = answer + Math.ceil(item / range)));
+
+  return answer;
+}
+
+/* function solution(n, stations, w) {
   //0에서 stations의 위치와 각 stations간의 거리를 비교하면서 나아가면 될듯
   let index = 0;
   let range = 1;
@@ -99,7 +135,7 @@ function solution(n, stations, w) {
     index = index + 1;
   }
 
-  arr = arr.filter((item) => item > 1);
+  arr = arr.filter((item) => item > 0);
 
   const range = 2 * w + 1;
 
@@ -108,3 +144,5 @@ function solution(n, stations, w) {
   return answer;
 }
 solution(n, stations, w);
+
+*/

@@ -149,7 +149,6 @@ function solution(gems) {
 
     if (gemsList.size === gemsKindNum) {
       answer.push([gemsList.values().next().value + 1, i + 1]);
-      // 첫번째 index의 value와 i 가 들어가야맞지
     }
   }
 

@@ -3,7 +3,6 @@ function solution(n, stations, w) {
   let index = 0;
   let answer = 0;
   let current = 0;
-
   if (stations[0] === 1) {
     current = 1 + w;
     index = index + 1;

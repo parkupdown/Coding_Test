@@ -42,7 +42,7 @@ function solution(maps) {
 
   for (let i = 0; i < maps.length; i++) {
     for (let j = 0; j < maps[0].length; j++) {
-      dfs(i, j, 0);
+      dfs(i, j);
       // 움직인다는 것은 ?? 결국 끊어졌다는 거
       // 이때 최대값을 ?
       if (sum !== 0) {

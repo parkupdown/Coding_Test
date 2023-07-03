@@ -160,3 +160,146 @@ function solution(maps) {
 }
 // 5가최대가 아닌 maps[0].length를 기준으로해주어야함 문제잘읽기
 // 47.8
+
+function solution(maps) {
+  // 먼저 Laver한테 가고
+  // Laver에서 EXIT으로 가고
+  // bfs를 함수형태로 만들어서 2번사용해야한다.
+  const answer = [];
+  const bfs = (first, target) => {
+    let visited = [];
+    maps.forEach((item) => {
+      const arr = Array.from({ length: item.length }, () => false);
+      visited.push(arr);
+    });
+
+    visited[first[0]][first[1]] = true;
+
+    let count = 0;
+
+    const queue = [];
+    queue.push(first);
+
+    const dx = [0, 1, 0, -1];
+    const dy = [1, 0, -1, 0];
+
+    while (queue.length > 0) {
+      const queueLength = queue.length;
+      for (let i = 0; i < queueLength; i++) {
+        const [x, y] = queue.shift();
+        for (let j = 0; j < 4; j++) {
+          let nx = x + dx[j];
+          let ny = y + dy[j];
+          if (
+            nx >= 0 &&
+            ny >= 0 &&
+            nx < maps.length &&
+            ny < maps[0].length &&
+            !visited[nx][ny] &&
+            maps[nx][ny] !== "X"
+          ) {
+            if (maps[nx][ny] === target) {
+              return count + 1;
+            }
+            queue.push([nx, ny]);
+            visited[nx][ny] = true;
+          }
+        }
+      }
+      //while문 끝
+      answer++;
+    }
+    return -1;
+  };
+
+  //start랑 exit찾기
+  let startIndex;
+  let exitIndex;
+  for (let i = 0; i < maps.length; i++) {
+    for (let j = 0; j < maps[0].length; j++) {
+      if (maps[i][j] === "S") {
+        startIndex = [i, j];
+      }
+      if (maps[i][j] === "E") {
+        exitIndex = [i, j];
+      }
+    }
+  }
+  const startToLaver = bfs(startIndex, "L");
+
+  console.log(startToLaver);
+}
+
+function solution(maps) {
+  // 먼저 Laver한테 가고
+  // Laver에서 EXIT으로 가고
+  // bfs를 함수형태로 만들어서 2번사용해야한다.
+  const bfs = (first, target) => {
+    let visited = [];
+    maps.forEach((item) => {
+      const arr = Array.from({ length: item.length }, () => false);
+      visited.push(arr);
+    });
+
+    visited[first[0]][first[1]] = true;
+
+    let count = 0;
+
+    const queue = [];
+    queue.push(first);
+
+    const dx = [0, 1, 0, -1];
+    const dy = [1, 0, -1, 0];
+
+    while (queue.length > 0) {
+      const queueLength = queue.length;
+      for (let i = 0; i < queueLength; i++) {
+        const [x, y] = queue.shift();
+        for (let j = 0; j < 4; j++) {
+          let nx = x + dx[j];
+          let ny = y + dy[j];
+          if (
+            nx >= 0 &&
+            ny >= 0 &&
+            nx < maps.length &&
+            ny < maps[0].length &&
+            !visited[nx][ny] &&
+            maps[nx][ny] !== "X"
+          ) {
+            if (maps[nx][ny] === target) {
+              return count + 1;
+            }
+            queue.push([nx, ny]);
+            visited[nx][ny] = true;
+          }
+        }
+      }
+      //while문 끝
+      count++;
+    }
+    return -1;
+  };
+
+  //start랑 exit찾기
+  let startIndex;
+  let laverIndex;
+  for (let i = 0; i < maps.length; i++) {
+    for (let j = 0; j < maps[0].length; j++) {
+      if (maps[i][j] === "S") {
+        startIndex = [i, j];
+      }
+      if (maps[i][j] === "L") {
+        laverIndex = [i, j];
+      }
+    }
+  }
+  const startToLaver = bfs(startIndex, "L");
+  if (startToLaver === -1) {
+    return -1;
+  }
+  const laverToExit = bfs(laverIndex, "E");
+  if (laverToExit === -1) {
+    return -1;
+  }
+  return startToLaver + laverToExit;
+}

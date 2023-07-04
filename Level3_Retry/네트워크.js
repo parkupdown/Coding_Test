@@ -25,3 +25,27 @@ function solution(n, computers) {
 
   return count;
 }
+
+function solution(n, computers) {
+  const visited = Array.from({ length: computers.length }, () => false);
+
+  let count = 0;
+  const dfs = (index) => {
+    for (let i = 0; i < computers.length; i++) {
+      if (i !== index && computers[index][i] === 1 && !visited[i]) {
+        visited[i] = true;
+        //방문해버리고
+        dfs(i);
+        //그 네트워크로 이동
+      }
+    }
+  };
+  for (let i = 0; i < computers.length; i++) {
+    if (!visited[i]) {
+      dfs(i);
+      // 방문안한 네트워크 즉, 독립적인 네트워크가 있다면 count+1
+      count++;
+    }
+  }
+  return count;
+}

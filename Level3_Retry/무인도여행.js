@@ -1,4 +1,3 @@
-let maps = ["4591X", "X1X5X", "X231X", "1XXX1"];
 function solution(maps) {
   //BFS로 다시풀어보기
   // start지점은 매번 다르지만

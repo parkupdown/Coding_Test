@@ -61,3 +61,52 @@ function solution(maps) {
 
   return answer.length === 0 ? [-1] : answer;
 }
+
+function solution(maps) {
+  //연결되어있으면 하나의 무인도
+  const visited = [];
+
+  maps.forEach((item) => {
+    const arr = Array.from({ length: item.length }, () => false);
+    visited.push(arr);
+  });
+
+  const bfs = ([firstX, firstY]) => {
+    const dx = [0, 1, 0, -1];
+    const dy = [1, 0, -1, 0];
+
+    const queue = [[firstX, firstY]];
+    while (queue.length > 0) {
+      for (let i = 0; i < queue.length; i++) {
+        const [x, y] = queue.shift();
+        for (let j = 0; j < 4; j++) {
+          const nx = x + dx[j];
+          const ny = y + dy[j];
+
+          if (
+            nx >= 0 &&
+            ny >= 0 &&
+            nx < maps.length &&
+            ny < maps[0].length &&
+            maps[nx][ny] !== "X" &&
+            !visited[nx][ny]
+          ) {
+            queue.push([nx, ny]);
+          }
+        }
+      }
+    }
+  };
+  const answer = [];
+  for (let i = 0; i < maps.length; i++) {
+    for (let j = 0; j < maps[0].length; j++) {
+      let count = 1;
+      bfs([i, j]);
+      if (count !== 1) {
+        answer.push(count);
+      }
+    }
+  }
+
+  return answer.sort((a, b) => a - b);
+}

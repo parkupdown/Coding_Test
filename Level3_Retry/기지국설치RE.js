@@ -48,3 +48,22 @@ function solution(n, stations, w) {
 
   return answers;
 }
+
+function solution(n, stations, w) {
+  //O(N)으로 문제를 해결해야함
+  stations.unshift(-w);
+  if (stations[stations.length - 1] !== n) {
+    stations.push(n + w + 1);
+  }
+  const range = 2 * w + 1;
+  let answer = 0;
+  for (let i = 0; i < stations.length - 1; i++) {
+    const left = stations[i] + w + 1;
+    const right = stations[i + 1] - w;
+
+    const plus = Math.ceil((right - left) / range);
+    answer = answer + plus;
+  }
+
+  return answer;
+}

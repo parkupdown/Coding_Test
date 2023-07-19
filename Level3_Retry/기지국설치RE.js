@@ -67,3 +67,4 @@ function solution(n, stations, w) {
 
   return answer;
 }
+//더 간결하게 해결

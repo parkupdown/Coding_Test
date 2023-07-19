@@ -47,3 +47,86 @@ function solution(str1, str2) {
   return Math.floor((Gyo / Hap) * 65536);
 }
 solution(str1, str2);
+
+function solution(str1, str2) {
+  //교집합의 크기를
+  // 합집합의 크기로 나눈 값
+  // 공집합이면 1
+
+  // 교집합은 있는거 내에서 겹치는거
+  // 합집합도 있는거 내에서 합쳐버려
+
+  // 영문자만 유효
+  // 영문자가 아닌게 섞이면 그건 버린다.
+
+  str1 = str1.toLowerCase();
+  str2 = str2.toLowerCase();
+
+  // 일단 2개씩 자르기
+  const regex = /^[a-z]+$/;
+
+  const str1Arr = [];
+  const str2Arr = [];
+  for (let i = 0; i < str1.length - 1; i++) {
+    const sum = str1[i] + str1[i + 1];
+    if (regex.test(sum)) {
+      str1Arr.push(sum);
+    }
+  }
+  for (let j = 0; j < str2.length - 1; j++) {
+    const sum = str2[j] + str2[j + 1];
+    if (regex.test(sum)) {
+      str2Arr.push(sum);
+    }
+  }
+  str1 = str1Arr;
+  str2 = str2Arr;
+  //이제 교집합, 합집합찾기
+  if (str1.length === 0 && str2.length === 0) {
+    return 65536;
+  }
+
+  // 두개 배열을 동일선상에놓고
+  // 교집합만 구하면되네
+  // 하나를 대상으로 다른 거랑 비교하면서 삭제하면됨 같은거 있으면 ?
+  // 삭제보단 stack 이용해서
+  const findGyo = (str1, str2) => {
+    const result = [];
+    for (let i = 0; i < str1.length; i++) {
+      const str2Index = str2.indexOf(str1[i]);
+      if (str2Index !== -1) {
+        result.push(str1[i]);
+        str2.splice(str2Index, 1);
+      }
+    }
+    return result;
+  };
+  const copyStr1 = [...str1];
+  const copyStr2 = [...str2];
+
+  let gyo = findGyo(copyStr1, copyStr2);
+  let hap = [...str1, ...str2];
+
+  const gyoCopy = [...gyo];
+  const findHap = (gyo, hap) => {
+    for (let i = 0; i < hap.length; i++) {
+      const gyoIndex = gyo.indexOf(hap[i]);
+      if (gyoIndex !== -1) {
+        gyo.splice(gyoIndex, 1);
+        hap.splice(i, 1);
+      }
+    }
+  };
+  findHap(gyoCopy, hap);
+
+  gyo = gyo.length;
+  hap = hap.length;
+
+  if (hap === 0) {
+    return 65536;
+  }
+  const answer = Math.floor((gyo / hap) * 65536);
+
+  return answer;
+}
+//성공

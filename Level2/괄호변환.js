@@ -1,3 +1,15 @@
+function solution(s) {
+  //) 는 쌓일 필요가 없음
+  const stack = [];
+  for (let i = 0; i < s.length; i++) {
+    if (stack.length === 0 && s[i] === ")") {
+      return false;
+    }
+    s[i] === "(" ? stack.push(1) : stack.pop();
+  }
+  return stack.length === 0 ? true : false;
+}
+
 let p = "()))()))(((())(()(";
 function solution(p) {
   const answer = [];
@@ -69,6 +81,7 @@ function solution(p) {
 }
 
 solution(p);
+
 /*function solution(p) {
   // 먼저 나눌 수 있어야함 p를 계속 쪼개는데
   // 해쉬를 사용하자

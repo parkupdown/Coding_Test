@@ -47,3 +47,35 @@ function solution(genres, plays) {
 
   return answer;
 }
+
+function solution(genres, plays) {
+  // index를 기준으로하는게 빠름
+
+  let hash = new Map();
+
+  // 먼저 많이 재생된 장르를 찾아야함
+
+  for (let i = 0; i < genres.length; i++) {
+    hash.has(genres[i])
+      ? hash.set(genres[i], hash.get(genres[i]) + plays[i])
+      : hash.set(genres[i], plays[i]);
+  }
+  hash = [...hash].sort((a, b) => b[1] - a[1]);
+
+  let answer = [];
+
+  for (let j = 0; j < hash.length; j++) {
+    const genre = hash[j][0];
+    let indexHash = new Map();
+    for (let k = 0; k < genres.length; k++) {
+      if (genre === genres[k]) {
+        indexHash.set(k, plays[k]);
+      }
+    }
+    indexHash = [...indexHash].sort((a, b) => b[1] - a[1]).slice(0, 2);
+    answer.push(...indexHash);
+  }
+  answer = answer.map((arr) => arr[0]);
+
+  return answer;
+}

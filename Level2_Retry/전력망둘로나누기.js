@@ -152,3 +152,93 @@ function solution(n, wires) {
   return answer[0];
 }
 // BFS로 해결
+
+function solution(n, wires) {
+  let count = 1;
+  // 일단 삭제할 index를 먼저 정하자
+  const bfs = (current, visited, removeIndex) => {
+    const queue = [current];
+    while (queue.length > 0) {
+      const queueLength = queue.length;
+      for (let i = 0; i < queueLength; i++) {
+        const currentConnect = queue.shift();
+        count = count + 1;
+        // 여기서 first,second를 뽑아서 비교하면된다.
+        for (let j = 0; j < wires.length; j++) {
+          if (
+            !visited[j] &&
+            removeIndex !== i &&
+            (currentConnect.includes(wires[j][0]) ||
+              currentConnect.includes(wires[j][1]))
+          ) {
+            //만약 해당 fisrt와 second가 있다면 해당 wires는 queue에 들어간다
+            visited[j] = true;
+            queue.push(wires[j]);
+          }
+        }
+      }
+    }
+  };
+  const answer = [];
+
+  for (let i = 0; i < wires.length; i++) {
+    // 여기의 i는 사용하지 않을것
+    const visited = Array.from({ length: wires.length }, () => false);
+    for (let j = 0; j < wires.length; j++) {
+      if (i !== j) {
+        bfs(wires[j], visited, i);
+        answer.push(Math.abs(count - (n - count)));
+        count = 1;
+        //여기서 없애기
+        break;
+      }
+    }
+  }
+
+  console.log(answer);
+}
+
+function solution(n, wires) {
+  let count = 0;
+  // 일단 삭제할 index를 먼저 정하자
+  const bfs = (current, visited, removeIndex) => {
+    const queue = [current];
+    while (queue.length > 0) {
+      const queueLength = queue.length;
+      for (let i = 0; i < queueLength; i++) {
+        const currentConnect = queue.shift();
+        count = count + 1;
+        // 여기서 first,second를 뽑아서 비교하면된다.
+        for (let j = 0; j < wires.length; j++) {
+          if (
+            !visited[j] &&
+            removeIndex !== j &&
+            (currentConnect.includes(wires[j][0]) ||
+              currentConnect.includes(wires[j][1]))
+          ) {
+            //만약 해당 fisrt와 second가 있다면 해당 wires는 queue에 들어간다
+            visited[j] = true;
+            queue.push(wires[j]);
+          }
+        }
+      }
+    }
+  };
+  const answer = [];
+
+  for (let i = 0; i < wires.length; i++) {
+    // 여기의 i는 사용하지 않을것
+    const visited = Array.from({ length: wires.length }, () => false);
+    for (let j = 0; j < wires.length; j++) {
+      if (i !== j) {
+        bfs(wires[j], visited, i);
+        answer.push(Math.abs(n - count - count));
+        count = 0;
+        //여기서 없애기
+        break;
+      }
+    }
+  }
+
+  return Math.min(...answer);
+}

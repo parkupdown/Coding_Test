@@ -233,3 +233,32 @@ function solution(s) {
     }
   }
 } //80점
+
+function solution(s) {
+  // 앞뒤로 같은게있는지
+
+  // 먼저 s의 길이부터 점점 작게 비교를 해나가자
+
+  //몇개씩 자를 건지 먼저 7부터
+
+  for (let i = s.length; i > 0; i--) {
+    //i=> s.length만큼 자르는 거 부터 시작한다.
+    for (let j = 0; j <= s.length - i; j++) {
+      const sliced = s.slice(j, i + j);
+      if (sliced.length === 1) {
+        return 1;
+      }
+      let count = 0;
+      for (let k = 0; k < Math.floor(sliced.length / 2); k++) {
+        if (sliced[k] !== sliced[sliced.length - 1 - k]) {
+          break;
+        }
+        count = count + 1;
+        if (count === Math.floor(sliced.length / 2)) {
+          return sliced.length;
+        }
+      }
+    }
+  }
+}
+// 100점으로 통과

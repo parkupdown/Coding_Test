@@ -50,3 +50,34 @@ function solution(sticker) {
     console.log(answer);
   };
 }
+
+function solution(sticker) {
+  // 원형이기 때문에 순서는 무의미
+
+  // 0 or 1이 시작점이도 +2 +3 중 그냥 큰거 쭉 가지고 가면될듯
+  let answer = 0;
+  const bfs = (startIndex, sum) => {
+    const queue = [[startIndex, sum]];
+    while (queue.length > 0) {
+      const queueLength = queue.length;
+
+      for (let i = 0; i < queueLength; i++) {
+        const [index, sum] = queue.shift();
+        if (sum > answer) {
+          answer = sum;
+        }
+        if (index + 2 < sticker.length - 1 + startIndex) {
+          queue.push([index + 2, sum + sticker[index + 2]]);
+        }
+        if (index + 3 < sticker.length - 1 + startIndex) {
+          queue.push([index + 3, sum + sticker[index + 3]]);
+        }
+      }
+    }
+  };
+
+  bfs(0, sticker[0]);
+  bfs(1, sticker[1]);
+
+  return answer;
+}

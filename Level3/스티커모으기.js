@@ -81,3 +81,99 @@ function solution(sticker) {
 
   return answer;
 }
+
+function solution(sticker) {
+  // 0 or 1부터 +2 or +3씩 나아가면됨
+  let answer = 0;
+  const bfs = (startIndex) => {
+    const queue = [[startIndex, sticker[startIndex]]];
+    // startIndex와 첫 sum의 요소를 가져옴
+    while (queue.length > 0) {
+      // queue가 다 빠질때까지 순환할거임
+      const queueLength = queue.length;
+      for (let i = 0; i < queueLength; i++) {
+        const [index, sum] = queue.shift();
+        // 각 queue요소의 index, sum을 가져옴
+        // 이제 각 sum에 더할 수 있어야한다.
+        for (let j = 2; j <= 3; j++) {
+          if (index + j - startIndex < sticker.length - 1) {
+            const plus = sticker[(index + j) % sticker.length];
+            queue.push([index + j, sum + plus]);
+            if (sum + plus > answer) {
+              answer = sum + plus;
+            }
+          }
+        }
+      }
+    }
+  };
+  bfs(0);
+  bfs(1);
+
+  return answer;
+}
+
+function solution(sticker) {
+  // 0 or 1 부터 출발해서 +2, +3 둘 중 더 큰걸로
+
+  // 큰거 작은거 각각 +2 +3 중 일단 start
+
+  //그런식으로 계속 비교하며 큰걸로나아감
+  const stickerLength = sticker.length;
+  const answer = [];
+  const detach = (index) => {
+    let firstIndex = index + 2;
+    let secondIndex = index + 3;
+    let first = sticker[firstIndex];
+    let second = sticker[secondIndex];
+
+    while (true) {
+      if (sticker[firstIndex + 2] < sticker[firstIndex + 3]) {
+        //만약 firstIndex+2 보다 firstIndex+3한 값이 더 크다면?
+        firstIndex = firstIndex + 3;
+      } else if (sticker[firstIndex + 2] >= sticker[firstIndex + 3]) {
+        firstIndex = firstIndex + 2;
+      }
+      if (firstIndex - index > stickerLength - 2) {
+        answer.push(first, second);
+        return;
+      }
+      first = first + sticker[stickerLength % firstIndex];
+
+      if (sticker[secondIndex + 2] < sticker[secondIndex + 3]) {
+        //만약 secondIndex+2 보다 secondIndex+3한 값이 더 크다면?
+        secondIndex = secondIndex + 3;
+      } else if (sticker[secondIndex + 2] >= sticker[secondIndex + 3]) {
+        secondIndex = secondIndex + 2;
+      }
+      if (secondIndex - index > stickerLength - 2) {
+        answer.push(first, second);
+        return;
+      }
+      second = second + sticker[stickerLength % secondIndex];
+    }
+  };
+  detach(0);
+  detach(1);
+}
+
+function solution(sticker) {
+  // 기억하는 식으로 해야하는데
+
+  // index와 합쳐진 sum
+  const answer = [];
+  const dfs = (firstIndex, index, sum) => {
+    if (index - firstIndex > sticker.length - 2) {
+      answer.push(sum);
+      return;
+    }
+    dfs(firstIndex, index + 2, sum + sticker[index % sticker.length]);
+    dfs(firstIndex, index + 3, sum + sticker[index % sticker.length]);
+  };
+
+  dfs(0, 0, 0);
+  dfs(1, 1, 0);
+
+  return Math.max(...answer);
+}
+//dfs로 해결하려했음 근데 시간 초과

@@ -177,3 +177,30 @@ function solution(sticker) {
   return Math.max(...answer);
 }
 //dfs로 해결하려했음 근데 시간 초과
+
+function solution(sticker) {
+  if (sticker.length === 1) {
+    return sticker[0];
+  }
+  const dp1 = Array.from({ length: sticker.length }, () => 0);
+  const dp2 = Array.from({ length: sticker.length }, () => 0);
+
+  //[0,0,0,0,0,0,0,0]
+  dp1[0] = sticker[0];
+  dp1[1] = sticker[0];
+  //1번을 떼는경우
+  dp2[1] = sticker[1];
+  //2번을 떼는경우
+
+  for (let i = 2; i < sticker.length; i++) {
+    dp1[i] = Math.max(dp1[i - 1], dp1[i - 2] + sticker[i]);
+  }
+  for (let j = 2; j < sticker.length; j++) {
+    dp2[j] = Math.max(dp2[j - 1], dp2[j - 2] + sticker[j]);
+  }
+
+  return Math.max(dp1[sticker.length - 2], dp2[sticker.length - 1]);
+}
+//dp로 해결했으니 블로그 참조
+
+//스스로 리펙토링 필요

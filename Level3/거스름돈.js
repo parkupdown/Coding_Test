@@ -30,3 +30,35 @@ function solution(n, money) {
 
   return answer % 1000000007;
 }
+//60점
+
+function solution(n, money) {
+  let answer = [];
+  const dfs = (sum, arr) => {
+    if (sum >= n) {
+      if (sum === n) {
+        const check = arr
+          .map((item) => item * 1)
+          .sort((a, b) => a - b)
+          .join(``);
+        if (!answer.includes(check)) {
+          answer.push(check);
+        }
+      }
+      return;
+    }
+
+    for (let i = 0; i < money.length; i++) {
+      //중복만 없애면된다.
+      arr.push(money[i]);
+      dfs(sum + money[i], arr);
+      arr.pop();
+    }
+  };
+  const arr = [];
+  dfs(0, arr);
+
+  answer = answer.length;
+
+  return answer % 1000000007;
+}

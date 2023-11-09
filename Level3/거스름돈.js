@@ -62,3 +62,42 @@ function solution(n, money) {
 
   return answer % 1000000007;
 }
+//70점
+//효율성테스트통과못함
+
+function solution(n, money) {
+  let answer = [];
+  // bfs형식으로 최대 자리수는 5개까지니까 자리에 들어올수있는 것들을 각각 구해보는거
+
+  // money => [1,2,5]
+  const arr = [];
+  const queue = [[0, arr]];
+  // sum, saveArr
+
+  while (queue.length > 0) {
+    const queueLength = queue.length;
+    for (let i = 0; i < queueLength; i++) {
+      const [sum, Arr] = queue.shift();
+      for (let j = 0; j < money.length; j++) {
+        if (sum + money[j] === n) {
+          let candidation = [...Arr];
+          candidation.push(money[j]);
+          candidation = candidation
+            .map((item) => item * 1)
+            .sort((a, b) => a - b)
+            .join(``);
+          if (!answer.includes(candidation)) {
+            answer.push(candidation);
+          }
+        } else if (sum + money[j] < n) {
+          const pushArr = [...Arr];
+          pushArr.push(money[j]);
+          queue.push([sum + money[j], pushArr]);
+        }
+      }
+    }
+  }
+
+  answer = answer.length;
+  return answer % 1000000007;
+}

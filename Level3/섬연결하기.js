@@ -53,3 +53,76 @@ function solution(n, costs) {
 }
 
 // 테스트 케이스만 통과
+
+function solution(n, costs) {
+  //n-1개의 라면 해당 n보다 1적은 만큼 연결했을 때 모두 false면 그때의 sum을 return
+
+  const landVisited = Array.from({ length: n }, () => false);
+  const visited = Array.from({ length: costs.length }, () => false);
+  const answer = [];
+  const dfs = (sum, count) => {
+    // 먼저 costs에서 한칸씩 더해가야함
+    if (count === n - 1) {
+      //이때 return이 됨
+      if (landVisited.includes(false) === false) {
+        //만약 이때 모든 섬이 연결되어있다면
+        answer.push(sum);
+      }
+      return;
+    }
+    for (let i = 0; i < costs.length; i++) {
+      if (!visited[i]) {
+        visited[i] = true;
+        landVisited[costs[i][0]] = true;
+        landVisited[costs[i][1]] = true;
+        dfs(sum + costs[i][2], count + 1);
+        //탈출하면 방문기록 초기화
+        visited[i] = false;
+        landVisited[costs[i][0]] = false;
+        landVisited[costs[i][1]] = false;
+      }
+    }
+  };
+
+  dfs(0, 0);
+
+  return Math.min(...answer);
+}
+// 25점
+
+function solution(n, costs) {
+  //n-1개의 라면 해당 n보다 1적은 만큼 연결했을 때 모두 false면 그때의 sum을 return
+
+  let landVisited = Array.from({ length: n }, () => 0);
+  const visited = Array.from({ length: costs.length }, () => false);
+  const answer = [];
+  const dfs = (sum, count) => {
+    // 먼저 costs에서 한칸씩 더해가야함
+    if (count === n - 1) {
+      //이때 return이 됨
+      if (landVisited.includes(0) === false) {
+        //만약 이때 모든 섬이 연결되어있다면
+        answer.push(sum);
+      }
+      return;
+    }
+    for (let i = 0; i < costs.length; i++) {
+      if (!visited[i]) {
+        visited[i] = true;
+        landVisited[costs[i][0]] = landVisited[costs[i][0]] + 1;
+        landVisited[costs[i][1]] = landVisited[costs[i][1]] + 1;
+        dfs(sum + costs[i][2], count + 1);
+        //탈출하면 방문기록 초기화
+        visited[i] = false;
+        //여기서 잘못됐네 무조건 해당 그게 false가 되는게 아님. 이전에서 연결됐다면 연결된것
+        landVisited[costs[i][0]] = landVisited[costs[i][0]] - 1;
+        landVisited[costs[i][1]] = landVisited[costs[i][1]] - 1;
+      }
+    }
+  };
+
+  dfs(0, 0);
+
+  return Math.min(...answer);
+}
+//35점

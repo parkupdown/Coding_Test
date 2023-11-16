@@ -126,3 +126,46 @@ function solution(n, costs) {
   return Math.min(...answer);
 }
 //35점
+
+function solution(n, costs) {
+  // 그리디 알고리즘
+
+  // 모든 섬을 통과하는데 가장 적은 비용을 들이고 싶다.
+
+  // 1-2-3-4
+  // 각 연결이 서로에게 영향을 미치긴한다.
+  // 그럼 2까지가는 가장 적은 경우의수 3까지가는가장적은경우의수 4까지가는가장적은경우의수
+  // 1까지 가는 가장 적은 경우의수 중 최소값을 찾으면 되지 않을까
+  // 그리고 각 경우에서 3가지만 뽑는거지
+
+  //4개를 모두 이으려면 무조건 3개는 거쳐야한다고 생각함
+
+  // 그리디의 핵심은 현재에 가장 best인 걸 선택한다는 점
+
+  // 만약 가장 적은 비용순으로 정렬을 하고 연결된부분만 선택을한다면?
+  let answer = 0;
+  const visited = Array.from({ length: n }, () => false);
+
+  costs.sort((a, b) => a[2] - b[2]);
+
+  for (let i = 0; i < costs.length; i++) {
+    const islandFirst = costs[i][0];
+    const islandSecond = costs[i][1];
+
+    const cost = costs[i][2];
+    if (!visited[islandFirst] || !visited[islandSecond]) {
+      if (!visited[islandFirst]) {
+        visited[islandFirst] = true;
+      }
+      if (!visited[islandSecond]) {
+        visited[islandSecond] = true;
+      }
+      answer = answer + cost;
+    }
+
+    if (visited.includes(false) === false) {
+      return answer;
+    }
+  }
+}
+//25점

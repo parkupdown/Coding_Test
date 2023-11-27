@@ -46,3 +46,30 @@ function solution(people, limit) {
 solution(people, limit);
 
 */
+function solution(people, limit) {
+  // 투포인터로?
+  let answer = 0;
+  people.sort((a, b) => b - a);
+  // 만약 왼쪽이 움직이는데 오른쪽은 무조건 빠지는거자나
+  // 근데 만약 오른쪽과 왼쪽의 차이가 1밖에 나지 않는다면 앞에거는 다 혼자타야함
+  let start = 0;
+  let end = people.length - 1;
+  while (start <= end) {
+    if (start === end) {
+      return answer + 1;
+    }
+    if (people[end] + people[start] <= limit) {
+      //탈수있음 end = end-1
+      end = end - 1;
+      start = start + 1;
+      answer = answer + 1;
+    } else if (people[end] + people[start] > limit) {
+      //탈수없음 오른쪽꺼하나떙겨
+      start = start + 1;
+      answer = answer + 1;
+      // 혼자타는놈발생
+    }
+  }
+  // 1차이나면 그때 Start 앞부분은 싹다 넣으면됨
+  return answer;
+}

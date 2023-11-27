@@ -169,3 +169,37 @@ function solution(n, costs) {
   }
 }
 //25점
+function solution(n, costs) {
+  // bfs로
+  // 시작은 0번섬
+  const visited = Array.from({ length: costs.length }, () => false);
+  let nap = 0;
+  const queue = [[0, 0, visited, nap]];
+  const answer = [];
+  // [시작섬, 시작 비용]
+  while (queue.length > 0) {
+    const lng = queue.length;
+    for (let i = 0; i < lng; i++) {
+      const [connectIland, cost, queueVisited, nap] = queue.shift();
+
+      if (nap === n - 1) {
+        answer.push(cost);
+      }
+      if (!queueVisited.includes(false)) {
+        answer.push(cost);
+      }
+      for (let j = 0; j < costs.length; j++) {
+        if (queueVisited[j] === false) {
+          if (costs[j][0] === connectIland || costs[j][1] === connectIland) {
+            const copy = [...queueVisited];
+            copy[j] = true;
+
+            queue.push([costs[j][1], cost + costs[j][2], copy, nap + 1]);
+            queue.push([costs[j][0], cost + costs[j][2], copy, nap + 1]);
+          }
+        }
+      }
+    }
+  }
+  return Math.min(...answer);
+}

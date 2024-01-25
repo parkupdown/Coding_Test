@@ -129,4 +129,4 @@ function solution(friends, gifts) {
     answer.push(sum);
   }
   return Math.max(...answer);
-}
+} // 성공
